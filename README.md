@@ -34,13 +34,13 @@ const cfg: Config = {
 const appServer = new App(cfg, new InMemoryShopRepository, new NodeHmacSigner);
 
 app.get('/authorize', async (req, res) => {
-    const resp = await appServer.handshake.authorize(req as Request);
+    const resp = await appServer.registration.authorize(req as Request);
 
     applyResponse(resp, res);
 });
 
 app.post('/authorize/callback', async (req, res) => {
-    const resp = await appServer.handshake.authorizeCallback(req as Request);
+    const resp = await appServer.registration.authorizeCallback(req as Request);
 
     applyResponse(resp, res);
 });

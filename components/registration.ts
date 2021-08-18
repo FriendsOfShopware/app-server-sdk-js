@@ -3,7 +3,7 @@ import { HTTP_OK, JsonResponse, Request, Response } from "../server";
 import { Shop } from "../shop";
 import { randomString } from "../util";
 
-export class Handshake {
+export class Registration {
     constructor(private app: App) { }
 
     public async authorize(req: Request): Promise<Response> {
