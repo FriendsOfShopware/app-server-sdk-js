@@ -1,20 +1,3 @@
-# Shopware App Server SDK in TypeScript
-
-## This is WIP!
-
-This SDK is written in pure Typescript with portability in mind to be able to use it on NodeJs, Deno, Cloudflare Worker or other runtimes.
-
-## Goals
-
-- Complete Registration Handshake between Shopware and this SDK
-- Verifiying and Signing of Responses
-- Provide a simple to use HttpClient
-
-## How to use it?
-
-### NodeJS example
-
-```typescript
 import { App } from "../../app";
 import { Config } from "../../config";
 import { InMemoryShopRepository } from "../../repository";
@@ -30,7 +13,6 @@ const cfg: Config = {
     authorizeCallbackUrl: 'http://localhost/callback'
 };
 
-// Use in memory shop repository. The registered shops are gone after restart. Add a own implementation to store persistent
 const appServer = new App(cfg, new InMemoryShopRepository, new NodeHmacSigner);
 
 app.get('/authorize', async (req, res) => {
@@ -46,5 +28,3 @@ app.post('/authorize/callback', async (req, res) => {
 });
 
 app.listen(8080);
-```
-
