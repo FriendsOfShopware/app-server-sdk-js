@@ -1,0 +1,25 @@
+{
+  "name": "app-server-sdk-typescript",
+  "version": "1.0.0",
+  "description": "## This is WIP!",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shyim/app-server-sdk-typescript.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shyim/app-server-sdk-typescript/issues"
+  },
+  "homepage": "https://github.com/shyim/app-server-sdk-typescript#readme",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^2.2.2"
+  }
+}

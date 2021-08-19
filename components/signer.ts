@@ -43,21 +43,20 @@ export class WebCryptoHmacSigner extends HmacSigner {
     
         const mac = await crypto.subtle.sign(
             'HMAC',
-            key,
+            key as CryptoKey,
             this.encoder.encode(message)
         )
     
-        return atob(String.fromCharCode(...new Uint8Array(mac)));
+        return this.buf2hex(mac);
     }
 
     async verify(signature: string, data: string, secret: string) {
-        const key = await this.getKeyForSecret(secret);
-    
-        return await crypto.subtle.verify(
-            'HMAC',
-            key,
-            this.encoder.encode(signature),
-            this.encoder.encode(data)
-        )
+        const signed = await this.sign(data, secret);
+
+        return signature === signed;
+    }
+
+    buf2hex(buf: any) {
+        return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
     }
 }
