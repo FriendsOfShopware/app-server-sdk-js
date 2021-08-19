@@ -35,19 +35,19 @@ export class Registration {
     public async authorizeCallback(req: Request): Promise<Response> {
         const body = JSON.parse(req.body);
 
-        if (typeof body.shopId !== 'string' || typeof body.apiKey !== 'string' || typeof body.secretKey !== 'string' || typeof req.headers['shopware-app-signature'] !== 'string') {
+        if (typeof body.shopId !== 'string' || typeof body.apiKey !== 'string' || typeof body.secretKey !== 'string' || typeof req.headers['shopware-shop-signature'] !== 'string') {
             throw new Error('Invalid Request');
-        }
-
-        const v = await this.app.signer.verify(req.headers['shopware-app-signature'], req.body, this.app.cfg.appSecret);
-        if (!v) {
-            throw new Error('Cannot validate app signature');
         }
 
         const shop = await this.app.repository.getShopById(body.shopId as string);
 
         if (shop === null) {
             throw new Error(`Cannot find shop for this id: ${body.shopId}`);
+        }
+
+        const v = await this.app.signer.verify(req.headers['shopware-shop-signature'], req.body, shop.shopSecret);
+        if (!v) {
+            throw new Error('Cannot validate app signature');
         }
 
         shop.clientId = body.apiKey;

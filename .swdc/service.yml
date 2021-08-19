@@ -1,0 +1,14 @@
+image: app-server-typescript
+build:
+  context: ~/Code/app-server
+volumes:
+  - ~/Code/app-server:/app
+environment:
+  VIRTUAL_HOST: app-server.dev.localhost
+  PORT: 80
+working_dir: /app/examples/node/
+command: ['nodemon', '--exec', 'ts-node', 'index.ts']
+networks:
+  default:
+    aliases:
+      - app-server.dev.localhost

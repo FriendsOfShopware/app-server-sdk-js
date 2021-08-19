@@ -19,32 +19,36 @@ import { App } from "../../app";
 import { Config } from "../../config";
 import { InMemoryShopRepository } from "../../repository";
 import express from 'express';
-import { Request } from "../../server";
-import { applyResponse } from '../../node/express';
+import {convertRequest, convertResponse, rawRequestMiddleware} from '../../node/express';
 import { NodeHmacSigner } from '../../node/signer';
 const app = express();
 
 const cfg: Config = {
     appName: 'Test',
     appSecret: 'testSecret',
-    authorizeCallbackUrl: 'http://localhost/callback'
+    authorizeCallbackUrl: 'http://app-server.dev.localhost/authorize/callback'
 };
 
-// Use in memory shop repository. The registered shops are gone after restart. Add a own implementation to store persistent
 const appServer = new App(cfg, new InMemoryShopRepository, new NodeHmacSigner);
 
-app.get('/authorize', async (req, res) => {
-    const resp = await appServer.registration.authorize(req as Request);
+app.use(rawRequestMiddleware);
 
-    applyResponse(resp, res);
+app.get('/authorize', async (req, res) => {
+    const resp = await appServer.registration.authorize(convertRequest(req));
+
+    convertResponse(resp, res);
 });
 
 app.post('/authorize/callback', async (req, res) => {
-    const resp = await appServer.registration.authorizeCallback(req as Request);
+    // @ts-ignore
+    console.log(req.rawBody)
+    const resp = await appServer.registration.authorizeCallback(convertRequest(req));
 
-    applyResponse(resp, res);
+    convertResponse(resp, res);
 });
 
-app.listen(8080);
+app.listen(process.env.PORT || 8080, () => {
+    console.log(`App listening at http://0.0.0.0:${process.env.PORT || 8080}`)
+})
 ```
 

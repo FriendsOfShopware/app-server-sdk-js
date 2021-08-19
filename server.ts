@@ -3,7 +3,8 @@ export const HTTP_OK = 200;
 export interface Request {
     query: any,
     headers: any,
-    body: string
+    body: string,
+    method: string
 }
 
 export class Response {

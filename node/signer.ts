@@ -1,12 +1,17 @@
 import { HmacSigner } from '../components/signer';
+import { createHmac } from "crypto";
 
 export class NodeHmacSigner extends HmacSigner {
     async sign(message: string, secret: string) {
-        const crypto = require('crypto');
-
-        return crypto.createHmac('sha256', secret)
-            .update(message)
-            .digest('hex');
+        const hmac = createHmac("sha256", secret);
+        return hmac
+            .update(
+                Buffer.from(
+                    message,
+                    "utf-8"
+                )
+            )
+            .digest("hex");
     }
 
     async verify(signature: string, data: string, secret: string) {
