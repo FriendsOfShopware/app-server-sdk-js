@@ -1,4 +1,5 @@
 import {Request, Response} from '../server';
+import express from "express";
 
 export function convertResponse(response: Response, expressResponse: any) {
     expressResponse.status(response.statusCode);
@@ -18,7 +19,7 @@ export function convertRequest(expressRequest: any): Request {
     };
 }
 
-export function rawRequestMiddleware(req, res, next) {
+export function rawRequestMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
     const contentType = req.headers['content-type'] || ''
         , mime = contentType.split(';')[0];
 
@@ -26,12 +27,15 @@ export function rawRequestMiddleware(req, res, next) {
         return next();
     }
 
-    var data = '';
+    let data = '';
     req.setEncoding('utf8');
-    req.on('data', function(chunk) {
+
+    req.on('data', function(chunk: string) {
         data += chunk;
     });
+
     req.on('end', function() {
+        // @ts-ignore
         req.rawBody = data;
         next();
     });

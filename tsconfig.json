@@ -1,7 +1,22 @@
 {
   "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "lib": ["es2015", "webworker"],
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
     "types": [
       "@cloudflare/workers-types",
+      "@types/express",
+      "@types/node"
     ]
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "examples"
+  ]
 }
+
