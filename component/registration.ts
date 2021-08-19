@@ -8,20 +8,25 @@ export class Registration {
 
     public async authorize(req: Request): Promise<Response> {
         if (
-            req.query['shop-url'] === undefined ||
-            req.headers['shopware-app-signature'] === undefined ||
-            req.query['shop-id'] === undefined ||
-            req.query['timestamp'] === undefined
+            !req.query.has('shop-url') ||
+            !req.headers.has('shopware-app-signature') ||
+            !req.query.has('shop-id') ||
+            !req.query.has('timestamp')
             ) {
             throw new Error('Invalid Request');
         }
 
-        const v = await this.app.signer.verify(req.headers['shopware-app-signature'], `shop-id=${req.query['shop-id']}&shop-url=${req.query['shop-url']}&timestamp=${req.query['timestamp']}`, this.app.cfg.appSecret);
+        const v = await this.app.signer.verify(
+            req.headers.get('shopware-app-signature') as string,
+            `shop-id=${req.query.get('shop-id')}&shop-url=${req.query.get('shop-url')}&timestamp=${req.query.get('timestamp')}`,
+            this.app.cfg.appSecret
+        );
+
         if (!v) {
             throw new Error('Cannot validate app signature');
         }
 
-        const shop = new Shop(req.query['shop-id'], req.query['shop-url'], randomString());
+        const shop = new Shop(req.query.get('shop-id') as string, req.query.get('shop-url') as string, randomString());
 
         await this.app.repository.createShop(shop);
 
@@ -35,7 +40,7 @@ export class Registration {
     public async authorizeCallback(req: Request): Promise<Response> {
         const body = JSON.parse(req.body);
 
-        if (typeof body.shopId !== 'string' || typeof body.apiKey !== 'string' || typeof body.secretKey !== 'string' || typeof req.headers['shopware-shop-signature'] !== 'string') {
+        if (typeof body.shopId !== 'string' || typeof body.apiKey !== 'string' || typeof body.secretKey !== 'string' || !req.headers.has('shopware-shop-signature')) {
             throw new Error('Invalid Request');
         }
 
@@ -45,7 +50,7 @@ export class Registration {
             throw new Error(`Cannot find shop for this id: ${body.shopId}`);
         }
 
-        const v = await this.app.signer.verify(req.headers['shopware-shop-signature'], req.body, shop.shopSecret);
+        const v = await this.app.signer.verify(req.headers.get('shopware-shop-signature') as string, req.body, shop.shopSecret);
         if (!v) {
             throw new Error('Cannot validate app signature');
         }

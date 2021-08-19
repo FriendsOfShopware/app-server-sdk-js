@@ -1,7 +1,7 @@
-import {Request, Response} from '../../server';
+import {Request as AppRequest, Response as AppResponse} from '../../server';
 import express from "express";
 
-export function convertResponse(response: Response, expressResponse: any) {
+export function convertResponse(response: AppResponse, expressResponse: express.Response) {
     expressResponse.status(response.statusCode);
     response.headers.forEach((val, key) => {
         expressResponse.header(key, val);
@@ -10,11 +10,23 @@ export function convertResponse(response: Response, expressResponse: any) {
     expressResponse.send(response.body);
 }
 
-export function convertRequest(expressRequest: any): Request {
+export function convertRequest(expressRequest: express.Request): AppRequest {
+    const queries = new Map<string, string>();
+    const headers = new Map<string, string>();
+
+    for (const [key, value] of Object.entries(expressRequest.headers)) {
+        headers.set(key, value as string);
+    }
+
+    for (const [key, value] of Object.entries(expressRequest.query)) {
+        queries.set(key, value as string);
+    }
+
     return {
+        // @ts-ignore
         body: expressRequest.rawBody || '',
-        headers: expressRequest.headers,
-        query: expressRequest.query,
+        headers: headers,
+        query: queries,
         method: expressRequest.method
     };
 }

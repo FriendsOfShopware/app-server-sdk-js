@@ -1,5 +1,5 @@
-import { Registration } from "./components/registration";
-import { HmacSigner } from "./components/signer";
+import { Registration } from "./component/registration";
+import { HmacSigner } from "./component/signer";
 import { Config } from "./config";
 import { ShopRepository } from "./repository";
 

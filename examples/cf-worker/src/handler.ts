@@ -1,6 +1,6 @@
 import {App} from "shopware-app-server-sdk";
 import {Config} from "shopware-app-server-sdk/config";
-import {WebCryptoHmacSigner} from "shopware-app-server-sdk/components/signer";
+import {WebCryptoHmacSigner} from "shopware-app-server-sdk/component/signer";
 import {convertRequest, convertResponse, CloudflareShopRepository} from "shopware-app-server-sdk/runtime/cf-worker";
 
 const cfg: Config = {

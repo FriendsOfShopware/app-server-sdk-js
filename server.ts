@@ -1,8 +1,8 @@
 export const HTTP_OK = 200;
 
 export interface Request {
-    query: any,
-    headers: any,
+    query: Map<string, string>,
+    headers: Map<string, string>,
     body: string,
     method: string
 }

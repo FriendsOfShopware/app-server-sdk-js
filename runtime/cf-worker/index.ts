@@ -42,15 +42,15 @@ export class CloudflareShopRepository implements ShopRepository {
 
 export async function convertRequest(request: Request): Promise<AppRequest> {
     const { searchParams } = new URL(request.url);
-    const queries: any = {};
-    const headers: any = {};
+    const queries = new Map<string, string>();
+    const headers = new Map<string, string>();
 
     searchParams.forEach((val: string, key: string) => {
-        queries[key] = val;
+        queries.set(key, val);
     });
 
     request.headers.forEach((val, key) => {
-        headers[key] = val;
+        headers.set(key, val);
     });
 
     let body = '';
