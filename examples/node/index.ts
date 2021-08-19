@@ -1,9 +1,10 @@
-import { App } from "../../app";
-import { Config } from "../../config";
-import { InMemoryShopRepository } from "../../repository";
+import {App} from "shopware-app-server-sdk";
+import {Config} from "shopware-app-server-sdk/config";
+import {InMemoryShopRepository} from "shopware-app-server-sdk/repository";
 import express from 'express';
-import {convertRequest, convertResponse, rawRequestMiddleware} from '../../node/express';
-import { NodeHmacSigner } from '../../node/signer';
+import {convertRequest, convertResponse, rawRequestMiddleware} from 'shopware-app-server-sdk/runtime/node/express';
+import {NodeHmacSigner} from 'shopware-app-server-sdk/runtime/node/signer';
+
 const app = express();
 
 const cfg: Config = {

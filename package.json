@@ -1,14 +1,16 @@
 {
   "name": "shopware-app-server-sdk",
-  "version": "0.0.1",
-  "description": "## This is WIP!",
-  "main": "dist/app.js",
-  "types": "dist/app.d.ts",
+  "version": "0.0.4",
+  "description": "Shopware App Server SDK",
+  "keywords": ["shopware", "cloudflare", "appsystem", "nodejs"],
+  "private": true,
+  "main": "app.js",
+  "types": "app.d.ts",
   "directories": {
     "example": "examples"
   },
   "scripts": {
-    "prepublishOnly": "tsc --build"
+    "publish-to-npm": "rm -rf dist; tsc --build && cp package.json dist && cat ./package.json | grep -v '\\\"private\\\":' > dist/package.json; cp README.md dist"
   },
   "repository": {
     "type": "git",

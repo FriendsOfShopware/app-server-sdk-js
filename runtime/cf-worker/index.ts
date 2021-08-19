@@ -1,6 +1,6 @@
-import {ShopRepository} from "../repository";
-import {Shop} from "../shop";
-import {Request as AppRequest, Response as AppResponse} from "../server";
+import {ShopRepository} from "../../repository";
+import {Shop} from "../../shop";
+import {Request as AppRequest, Response as AppResponse} from "../../server";
 
 export class CloudflareShopRepository implements ShopRepository {
     private storage: KVNamespace;

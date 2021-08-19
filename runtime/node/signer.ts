@@ -1,4 +1,4 @@
-import { HmacSigner } from '../components/signer';
+import { HmacSigner } from '../../components/signer';
 import { createHmac } from "crypto";
 
 export class NodeHmacSigner extends HmacSigner {

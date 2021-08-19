@@ -1,7 +1,7 @@
-import {App} from "../../../app";
-import {Config} from "../../../config";
-import {WebCryptoHmacSigner} from "../../../components/signer";
-import {convertRequest, convertResponse, CloudflareShopRepository} from "../../../cf-worker";
+import {App} from "shopware-app-server-sdk";
+import {Config} from "shopware-app-server-sdk/config";
+import {WebCryptoHmacSigner} from "shopware-app-server-sdk/components/signer";
+import {convertRequest, convertResponse, CloudflareShopRepository} from "shopware-app-server-sdk/runtime/cf-worker";
 
 const cfg: Config = {
     appName: 'Test',

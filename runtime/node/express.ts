@@ -1,4 +1,4 @@
-import {Request, Response} from '../server';
+import {Request, Response} from '../../server';
 import express from "express";
 
 export function convertResponse(response: Response, expressResponse: any) {
