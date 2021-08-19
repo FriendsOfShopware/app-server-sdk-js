@@ -1,4 +1,4 @@
-import { Response } from '../server';
+import { Request, Response } from '../server';
 
 export abstract class HmacSigner {
     abstract sign(message: string, secret: string): Promise<string>
@@ -6,6 +6,10 @@ export abstract class HmacSigner {
 
     async signResponse(response: Response, secret: string): Promise<void> {
         response.headers.set('shopware-app-signature', await this.sign(response.body, secret))
+    }
+
+    async verifyPostRequest(request: Request, secret: string) {
+        return await this.verify(request.headers.get('shopware-shop-signature') as string, request.body, secret);
     }
 }
 

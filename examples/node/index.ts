@@ -5,6 +5,8 @@ import express from 'express';
 import {convertRequest, convertResponse, rawRequestMiddleware} from 'shopware-app-server-sdk/runtime/node/express';
 import {NodeHmacSigner} from 'shopware-app-server-sdk/runtime/node/signer';
 
+globalThis.fetch = require('node-fetch');
+
 const app = express();
 
 const cfg: Config = {
@@ -24,11 +26,17 @@ app.get('/authorize', async (req, res) => {
 });
 
 app.post('/authorize/callback', async (req, res) => {
-    // @ts-ignore
-    console.log(req.rawBody)
     const resp = await appServer.registration.authorizeCallback(convertRequest(req));
 
     convertResponse(resp, res);
+});
+
+app.post('/event/product-changed', async (req, res) => {
+    const context = await appServer.contextResolver.fromSource(convertRequest(req));
+
+    console.log(await context.httpClient.post('/search/product'));
+
+    res.send();
 });
 
 app.listen(process.env.PORT || 8080, () => {

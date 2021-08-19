@@ -4,11 +4,13 @@
 
 This SDK is written in pure Typescript with portability in mind being able to use it on NodeJs, Deno, Cloudflare Worker or other runtimes.
 
-## Goals
+## Features
 
-- Complete Registration Handshake between Shopware and this SDK
-- Verifying and Signing of Responses
-- Provide a simple to use HttpClient
+- Provides registration process for app
+- Verify and signing of requests / responses
+- preconfigured API Client
+
+- Complete Registration Handshake between Shopware and this 
 
 ## How to use it?
 
@@ -23,6 +25,8 @@ import {InMemoryShopRepository} from "shopware-app-server-sdk/repository";
 import express from 'express';
 import {convertRequest, convertResponse, rawRequestMiddleware} from 'shopware-app-server-sdk/runtime/node/express';
 import {NodeHmacSigner} from 'shopware-app-server-sdk/runtime/node/signer';
+
+globalThis.fetch = require('node-fetch');
 
 const app = express();
 
@@ -43,11 +47,17 @@ app.get('/authorize', async (req, res) => {
 });
 
 app.post('/authorize/callback', async (req, res) => {
-    // @ts-ignore
-    console.log(req.rawBody)
     const resp = await appServer.registration.authorizeCallback(convertRequest(req));
 
     convertResponse(resp, res);
+});
+
+app.post('/event/product-changed', async (req, res) => {
+    const context = await appServer.contextResolver.fromSource(convertRequest(req));
+
+    console.log(await context.httpClient.post('/search/product'));
+
+    res.send();
 });
 
 app.listen(process.env.PORT || 8080, () => {

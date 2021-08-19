@@ -1,0 +1,108 @@
+import {Shop} from "../shop";
+import {ApiClientAuthenticationFailed, ApiClientRequestFailed} from "../errors/ApiClient";
+
+export class HttpClient {
+    private storage: { expiresIn: Date|null; token: string|null };
+
+    constructor(private shop: Shop) {
+        this.storage = {
+            token: null,
+            expiresIn: null
+        }
+    }
+
+    async get(url: string, headers: object = {}): Promise<HttpResponse> {
+        return await this.request('GET', url, '', headers);
+    }
+
+    async post(url: string, json: object = {}, headers: any = {}): Promise<HttpResponse> {
+        headers['content-type'] = 'application/json';
+        headers['accept'] = 'application/json';
+
+        return await this.request('POST', url, '', headers);
+    }
+
+    async put(url: string, json: object = {}, headers: any = {}): Promise<HttpResponse> {
+        headers['content-type'] = 'application/json';
+        headers['accept'] = 'application/json';
+
+        return await this.request('PUT', url, '', headers);
+    }
+
+    async delete(url: string, json: object = {}, headers: any = {}): Promise<HttpResponse> {
+        headers['content-type'] = 'application/json';
+        headers['accept'] = 'application/json';
+
+        return await this.request('DELETE', url, '', headers);
+    }
+
+    private async request(method: string, url: string, body: string = '', headers: object = {}): Promise<HttpResponse> {
+        const fHeaders: any = Object.assign({}, headers);
+        fHeaders['Authorization'] = `Bearer ${await this.getToken()}`;
+
+        const f = await globalThis.fetch(
+            `${this.shop.shopUrl}/api${url}`,
+            {
+                body,
+                headers: fHeaders,
+                method
+            }
+        )
+
+        // Obtain new token
+        if (!f.ok && f.status === 401) {
+            this.storage.expiresIn = null;
+
+            return await this.request(method, url, body, headers);
+        } else if(!f.ok) {
+            throw new ApiClientRequestFailed(this.shop.id, new HttpResponse(f.status, await f.json(), f.headers))
+        }
+
+        return new HttpResponse(f.status, await f.json(), f.headers);
+    }
+
+    private async getToken(): Promise<string> {
+        if (this.storage.expiresIn === null) {
+            const auth = await globalThis.fetch(
+                `${this.shop.shopUrl}/api/oauth/token`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        grant_type: 'client_credentials',
+                        client_id: this.shop.clientId,
+                        client_secret: this.shop.clientSecret
+                    })
+                }
+            )
+
+            if (!auth.ok) {
+                throw new ApiClientAuthenticationFailed(this.shop.id, new HttpResponse(auth.status, (await auth.json()), auth.headers))
+            }
+
+            const expireDate = new Date();
+            const authBody = await auth.json();
+            this.storage.token = authBody.access_token;
+            expireDate.setSeconds(expireDate.getSeconds() + authBody.expires_in);
+
+            return this.storage.token as string;
+        }
+
+        if (this.storage.expiresIn.getTime() > (new Date()).getTime()) {
+            // Expired
+
+            this.storage.expiresIn = null;
+
+            return await this.getToken();
+        }
+
+        return this.storage.token as string;
+    }
+}
+
+export class HttpResponse {
+    constructor(public statusCode: number, public body: object, public headers: Headers) {
+    }
+}
