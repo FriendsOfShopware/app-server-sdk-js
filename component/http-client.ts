@@ -19,21 +19,21 @@ export class HttpClient {
         headers['content-type'] = 'application/json';
         headers['accept'] = 'application/json';
 
-        return await this.request('POST', url, '', headers);
+        return await this.request('POST', url, JSON.stringify(json), headers);
     }
 
     async put(url: string, json: object = {}, headers: any = {}): Promise<HttpResponse> {
         headers['content-type'] = 'application/json';
         headers['accept'] = 'application/json';
 
-        return await this.request('PUT', url, '', headers);
+        return await this.request('PUT', url, JSON.stringify(json), headers);
     }
 
     async delete(url: string, json: object = {}, headers: any = {}): Promise<HttpResponse> {
         headers['content-type'] = 'application/json';
         headers['accept'] = 'application/json';
 
-        return await this.request('DELETE', url, '', headers);
+        return await this.request('DELETE', url, JSON.stringify(json), headers);
     }
 
     private async request(method: string, url: string, body: string = '', headers: object = {}): Promise<HttpResponse> {
