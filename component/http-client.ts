@@ -103,6 +103,6 @@ export class HttpClient {
 }
 
 export class HttpResponse {
-    constructor(public statusCode: number, public body: object, public headers: Headers) {
+    constructor(public statusCode: number, public body: any, public headers: Headers) {
     }
 }
