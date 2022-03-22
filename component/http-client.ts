@@ -29,6 +29,13 @@ export class HttpClient {
         return await this.request('PUT', url, JSON.stringify(json), headers);
     }
 
+    async patch(url: string, json: object = {}, headers: any = {}): Promise<HttpResponse> {
+        headers['content-type'] = 'application/json';
+        headers['accept'] = 'application/json';
+
+        return await this.request('PATCH', url, JSON.stringify(json), headers);
+    }
+
     async delete(url: string, json: object = {}, headers: any = {}): Promise<HttpResponse> {
         headers['content-type'] = 'application/json';
         headers['accept'] = 'application/json';
