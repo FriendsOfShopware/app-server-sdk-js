@@ -61,7 +61,7 @@ export class HttpClient {
         return new HttpResponse(f.status, await f.json(), f.headers);
     }
 
-    private async getToken(): Promise<string> {
+    async getToken(): Promise<string> {
         if (this.storage.expiresIn === null) {
             const auth = await globalThis.fetch(
                 `${this.shop.shopUrl}/api/oauth/token`,

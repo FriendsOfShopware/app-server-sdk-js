@@ -1,6 +1,6 @@
 {
   "name": "shopware-app-server-sdk",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Shopware App Server SDK",
   "keywords": ["shopware", "cloudflare", "appsystem", "nodejs"],
   "private": true,
