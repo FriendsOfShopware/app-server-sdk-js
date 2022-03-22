@@ -57,6 +57,10 @@ export class HttpClient {
         } else if(!f.ok) {
             throw new ApiClientRequestFailed(this.shop.id, new HttpResponse(f.status, await f.json(), f.headers))
         }
+        
+        if (f.status === 204) {
+            return new HttpResponse(f.status, {}, f.headers);
+        }
 
         return new HttpResponse(f.status, await f.json(), f.headers);
     }
