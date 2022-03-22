@@ -1,7 +1,5 @@
 # Shopware App Server SDK in TypeScript
 
-## This is WIP!
-
 This SDK is written in pure Typescript with portability in mind being able to use it on NodeJs, Deno, Cloudflare Worker or other runtimes.
 
 ## Features
