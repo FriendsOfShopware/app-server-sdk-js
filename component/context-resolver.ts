@@ -19,6 +19,17 @@ export class ContextResolver {
 
         return new Context(shop, webHookBody, new HttpClient(shop));
     }
+
+    public async fromModule(req: AppRequest): Promise<Context> {
+        const shop = await this.app.repository.getShopById(req.query.get('shop-id') as string);
+        if (shop === null) {
+            throw new Error(`Cannot find shop by id ${req.query.get('shop-id')}`);
+        }
+
+        await this.app.signer.verifyGetRequest(req, shop.shopSecret);
+
+        return new Context(shop, req.query, new HttpClient(shop));
+    }
 }
 
 class Context {

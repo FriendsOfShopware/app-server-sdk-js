@@ -11,6 +11,15 @@ export abstract class HmacSigner {
     async verifyPostRequest(request: Request, secret: string) {
         return await this.verify(request.headers.get('shopware-shop-signature') as string, request.body, secret);
     }
+
+    async verifyGetRequest(request: Request, secret: string) {
+        // @ts-ignore
+        const params = new URLSearchParams(request.query);
+        const signature = params.get('shopware-shop-signature') as string;
+        params.delete('shopware-shop-signature');
+
+        return await this.verify(signature, params.toString(), secret);
+    }
 }
 
 export class WebCryptoHmacSigner extends HmacSigner {
