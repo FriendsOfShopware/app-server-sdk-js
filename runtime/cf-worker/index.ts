@@ -32,6 +32,7 @@ export class CloudflareShopRepository implements ShopRepository {
             obj.shopSecret || '',
             obj.clientId || '',
             obj.clientSecret || '',
+            obj.customFields || {},
         )
     }
 

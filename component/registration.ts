@@ -37,7 +37,7 @@ export class Registration {
         })
     }
 
-    public async authorizeCallback(req: Request): Promise<Response> {
+    public async authorizeCallback(req: Request, sucessHandler?: (shop: Shop) => Promise<void>): Promise<Response> {
         const body = JSON.parse(req.body);
 
         if (typeof body.shopId !== 'string' || typeof body.apiKey !== 'string' || typeof body.secretKey !== 'string' || !req.headers.has('shopware-shop-signature')) {
@@ -52,11 +52,18 @@ export class Registration {
 
         const v = await this.app.signer.verify(req.headers.get('shopware-shop-signature') as string, req.body, shop.shopSecret);
         if (!v) {
+            // Shop has failed the verify. Delete it from our DB
+            await this.app.repository.deleteShop(shop);
+
             throw new Error('Cannot validate app signature');
         }
 
         shop.clientId = body.apiKey;
         shop.clientSecret = body.secretKey;
+
+        if (sucessHandler) {
+            await sucessHandler(shop);
+        }
 
         await this.app.repository.updateShop(shop);
 
