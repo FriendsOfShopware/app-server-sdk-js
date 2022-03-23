@@ -97,11 +97,12 @@ export class HttpClient {
             const authBody = await auth.json();
             this.storage.token = authBody.access_token;
             expireDate.setSeconds(expireDate.getSeconds() + authBody.expires_in);
+            this.storage.expiresIn = expireDate;
 
             return this.storage.token as string;
         }
 
-        if (this.storage.expiresIn.getTime() > (new Date()).getTime()) {
+        if (this.storage.expiresIn.getTime() < (new Date()).getTime()) {
             // Expired
 
             this.storage.expiresIn = null;
