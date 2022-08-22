@@ -12,7 +12,7 @@ export class HttpClient {
     }
 
     async get(url: string, headers: object = {}): Promise<HttpResponse> {
-        return await this.request('GET', url, '', headers);
+        return await this.request('GET', url, null, headers);
     }
 
     async post(url: string, json: object = {}, headers: any = {}): Promise<HttpResponse> {
@@ -43,7 +43,7 @@ export class HttpClient {
         return await this.request('DELETE', url, JSON.stringify(json), headers);
     }
 
-    private async request(method: string, url: string, body: string = '', headers: object = {}): Promise<HttpResponse> {
+    private async request(method: string, url: string, body: string|null = '', headers: object = {}): Promise<HttpResponse> {
         const fHeaders: any = Object.assign({}, headers);
         fHeaders['Authorization'] = `Bearer ${await this.getToken()}`;
 
