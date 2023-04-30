@@ -17,6 +17,7 @@ await build({
     name: "@friendsofshopware/app-server-sdk",
     version: Deno.args[0],
     description: "Shopware App Server SDK",
+    keywords: ["shopware", "app-server", "sdk", "appsystem"],
     license: "MIT",
     repository: {
       type: "git",
@@ -25,6 +26,9 @@ await build({
     bugs: {
       url: "https://github.com/FriendsOfShopware/app-server-sdk-js/issues",
     },
+    engines: {
+      "node": ">=18.0.0",
+    }
   },
   postBuild() {
     Deno.copyFileSync("./README.md", "./npm/README.md");
