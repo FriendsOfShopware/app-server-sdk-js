@@ -20,7 +20,7 @@ jobs:
       - name: Transform to NPM Package
         run: |
           cd packages/app-server-sdk
-          deno run -A scripts/build.ts ${{ github.ref_name }}
+          deno run -A scripts/build.ts ${{ github.event.release.tag_name }}
       - name: Publish to NPM
         run: |
           cd packages/app-server-sdk/npm
