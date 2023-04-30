@@ -1,14 +1,12 @@
-import express from "express";
+import express from "https://deno.land/x/express@v0.0.0/mod.ts";
 
-export function convertResponse(response: Response, expressResponse: express.Response) {
+export async function convertResponse(response: Response, expressResponse: express.Response) {
     expressResponse.status(response.status);
     response.headers.forEach((val, key) => {
         expressResponse.header(key, val);
     })
 
-    response.text().then((text) => {
-        expressResponse.send(text);
-    });
+    expressResponse.send(await response.text());
 }
 
 export function convertRequest(expressRequest: express.Request): Request {

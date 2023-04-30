@@ -16,12 +16,25 @@ await build({
     timers: false,
     undici: false,
     weakRef: false,
-    webSocket: false
+    webSocket: false,
+    customDev: [
+      {
+        package: {
+          name: "express",
+          version: "^4.18.2",
+        },
+        typesPackage: {
+          name: "@types/express",
+          version: "^4.17.17",
+        },
+        globalNames: ["express"]
+      }
+    ]
   },
   mappings: {
-    "https://deno.land/x/shopware_app_server_sdk/mod.ts": {
-      name: "@friendsofshopware/app-server-sdk",
-      version: "^0.0.24",
+    "https://deno.land/x/express@v0.0.0/mod.ts": {
+      name: "express",
+      version: "^4.18.2",
       peerDependency: false,
     },
   },
@@ -29,9 +42,9 @@ await build({
     lib: ["es2022", "dom", "webworker"],
   },
   package: {
-    name: "@friendsofshopware/app-server-sdk-cloudflare",
+    name: "@friendsofshopware/app-server-sdk-express",
     version: Deno.args[0],
-    description: "Cloudflare Integration for Shopware App Server SDK",
+    description: "Express Integration for Shopware App Server SDK",
     license: "MIT",
     repository: {
       type: "git",
@@ -40,5 +53,8 @@ await build({
     bugs: {
       url: "https://github.com/FriendsOfShopware/app-server-sdk-js/issues",
     },
+    devDependencies: {
+      "@types/express": "^4.17.17",
+    }
   }
 });

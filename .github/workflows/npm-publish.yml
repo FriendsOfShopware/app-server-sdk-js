@@ -5,9 +5,16 @@ on:
     types: [created]
 
 jobs:
-  core:
-    name: Publish Core Package
+  publish:
+    name: Publish Package
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - 'app-server-sdk'
+          - 'app-server-sdk-cloudflare'
+          - 'app-server-sdk-express'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -19,33 +26,12 @@ jobs:
           deno-version: v1.x
       - name: Transform to NPM Package
         run: |
-          cd packages/app-server-sdk
+          cd packages/${{ matrix.package }}
           deno run -A scripts/build.ts ${{ github.event.release.tag_name }}
       - name: Publish to NPM
         run: |
-          cd packages/app-server-sdk/npm
+          cd packages/${{ matrix.package }}/npm
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
-  cloudflare:
-    name: Publish Cloudflare Package
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 18
-          registry-url: 'https://registry.npmjs.org'
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-      - name: Transform to NPM Package
-        run: |
-          cd packages/app-server-sdk-cloudflare
-          deno run -A scripts/build.ts ${{ github.event.release.tag_name }}
-      - name: Publish to NPM
-        run: |
-          cd packages/app-server-sdk-cloudflare/npm
-          npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
+ 
