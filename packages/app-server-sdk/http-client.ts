@@ -1,9 +1,9 @@
-import { Shop } from "./shop.ts";
+import { IShop } from "./repository.ts";
 
 export class HttpClient {
   private storage: { expiresIn: Date | null; token: string | null };
 
-  constructor(private shop: Shop) {
+  constructor(private shop: IShop) {
     this.storage = {
       token: null,
       expiresIn: null,
@@ -68,7 +68,7 @@ export class HttpClient {
     fHeaders["Authorization"] = `Bearer ${await this.getToken()}`;
 
     const f = await globalThis.fetch(
-      `${this.shop.shopUrl}/api${url}`,
+      `${this.shop.getShopUrl()}/api${url}`,
       {
         body,
         headers: fHeaders,
@@ -83,7 +83,7 @@ export class HttpClient {
       return await this.request(method, url, body, headers);
     } else if (!f.ok) {
       throw new ApiClientRequestFailed(
-        this.shop.id,
+        this.shop.getShopId(),
         new HttpResponse(f.status, await f.json(), f.headers),
       );
     }
@@ -98,7 +98,7 @@ export class HttpClient {
   async getToken(): Promise<string> {
     if (this.storage.expiresIn === null) {
       const auth = await globalThis.fetch(
-        `${this.shop.shopUrl}/api/oauth/token`,
+        `${this.shop.getShopUrl()}/api/oauth/token`,
         {
           method: "POST",
           headers: {
@@ -106,15 +106,15 @@ export class HttpClient {
           },
           body: JSON.stringify({
             grant_type: "client_credentials",
-            client_id: this.shop.clientId,
-            client_secret: this.shop.clientSecret,
+            client_id: this.shop.getShopClientId(),
+            client_secret: this.shop.getShopClientSecret(),
           }),
         },
       );
 
       if (!auth.ok) {
         throw new ApiClientAuthenticationFailed(
-          this.shop.id,
+          this.shop.getShopId(),
           new HttpResponse(auth.status, await auth.json(), auth.headers),
         );
       }

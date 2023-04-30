@@ -1,5 +1,4 @@
 import { AppServer } from "./app.ts";
-import { Shop } from "./shop.ts";
 
 export class Registration {
   constructor(private app: AppServer) {}
@@ -28,7 +27,7 @@ export class Registration {
       throw new Error("Cannot validate app signature");
     }
 
-    const shop = new Shop(
+    const shop = this.app.repository.createShopStruct(
       url.searchParams.get("shop-id") as string,
       url.searchParams.get("shop-url") as string,
       randomString(),
@@ -39,10 +38,10 @@ export class Registration {
     return new Response(
       JSON.stringify({
         proof: await this.app.signer.sign(
-          shop.id + shop.shopUrl + this.app.cfg.appName,
+          shop.getShopId() + shop.getShopUrl() + this.app.cfg.appName,
           this.app.cfg.appSecret,
         ),
-        secret: shop.shopSecret,
+        secret: shop.getShopSecret(),
         confirmation_url: this.app.cfg.authorizeCallbackUrl,
       }),
       {
@@ -54,8 +53,7 @@ export class Registration {
   }
 
   public async authorizeCallback(
-    req: Request,
-    sucessHandler?: (shop: Shop) => Promise<void>,
+    req: Request
   ): Promise<Response> {
     const bodyContent = await req.text();
     const body = JSON.parse(bodyContent);
@@ -77,21 +75,16 @@ export class Registration {
     const v = await this.app.signer.verify(
       req.headers.get("shopware-shop-signature") as string,
       bodyContent,
-      shop.shopSecret,
+      shop.getShopSecret(),
     );
     if (!v) {
       // Shop has failed the verify. Delete it from our DB
-      await this.app.repository.deleteShop(shop);
+      await this.app.repository.deleteShop(shop.getShopId());
 
       throw new Error("Cannot validate app signature");
     }
 
-    shop.clientId = body.apiKey;
-    shop.clientSecret = body.secretKey;
-
-    if (sucessHandler) {
-      await sucessHandler(shop);
-    }
+    shop.setShopCredentials(body.apiKey, body.secretKey);
 
     await this.app.repository.updateShop(shop);
 

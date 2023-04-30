@@ -1,4 +1,4 @@
-import {ShopRepository} from "../../repository";
+import {ShopRepository} from "https://deno.land/x/shopware_app_server_sdk/repository.ts";
 import {Shop} from "../../shop";
 
 export class CloudflareShopRepository implements ShopRepository {

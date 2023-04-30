@@ -18,11 +18,11 @@ jobs:
           deno-version: v1.x
       - name: Transform to NPM Package
         run: |
-          cd packages\app-server-sdk
-          deno run -A .\scripts\build.ts ${{ github.ref_name }}
+          cd packages/app-server-sdk
+          deno run -A scripts/build.ts ${{ github.ref_name }}
       - name: Publish to NPM
         run: |
-          cd packages\app-server-sdk/npm
+          cd packages/app-server-sdk/npm
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}

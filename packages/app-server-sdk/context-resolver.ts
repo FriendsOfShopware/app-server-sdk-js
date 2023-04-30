@@ -1,6 +1,6 @@
 import { AppServer } from "./app.ts";
-import { Shop } from "./shop.ts";
 import { HttpClient } from "./http-client.ts";
+import { IShop } from "./repository.ts";
 
 export class ContextResolver {
   constructor(private app: AppServer) {}
@@ -20,7 +20,7 @@ export class ContextResolver {
     await this.app.signer.verify(
       req.headers.get("shopware-shop-signature") as string,
       webHookContent,
-      shop.shopSecret,
+      shop.getShopSecret(),
     );
 
     return new Context(shop, webHookBody, new HttpClient(shop));
@@ -38,7 +38,7 @@ export class ContextResolver {
       );
     }
 
-    await this.app.signer.verifyGetRequest(req, shop.shopSecret);
+    await this.app.signer.verifyGetRequest(req, shop.getShopSecret());
 
     const paramsObject: Record<string, string> = {};
 
@@ -52,7 +52,7 @@ export class ContextResolver {
 
 class Context {
   constructor(
-    public shop: Shop,
+    public shop: IShop,
     public payload: any,
     public httpClient: HttpClient,
   ) {
