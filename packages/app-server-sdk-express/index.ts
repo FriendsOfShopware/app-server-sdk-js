@@ -1,34 +1,29 @@
-import {Request as AppRequest, Response as AppResponse} from '../../server';
 import express from "express";
 
-export function convertResponse(response: AppResponse, expressResponse: express.Response) {
-    expressResponse.status(response.statusCode);
+export function convertResponse(response: Response, expressResponse: express.Response) {
+    expressResponse.status(response.status);
     response.headers.forEach((val, key) => {
         expressResponse.header(key, val);
     })
 
-    expressResponse.send(response.body);
+    response.text().then((text) => {
+        expressResponse.send(text);
+    });
 }
 
-export function convertRequest(expressRequest: express.Request): AppRequest {
-    const queries = new Map<string, string>();
-    const headers = new Map<string, string>();
+export function convertRequest(expressRequest: express.Request): Request {
+    const headers = new Headers();
 
     for (const [key, value] of Object.entries(expressRequest.headers)) {
         headers.set(key, value as string);
     }
 
-    for (const [key, value] of Object.entries(expressRequest.query)) {
-        queries.set(key, value as string);
-    }
-
-    return {
+    return new Request(expressRequest.url, {
+        headers,
+        method: expressRequest.method,
         // @ts-ignore
         body: expressRequest.rawBody || '',
-        headers: headers,
-        query: queries,
-        method: expressRequest.method
-    };
+    });
 }
 
 export function rawRequestMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
