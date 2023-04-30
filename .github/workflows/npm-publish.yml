@@ -25,6 +25,6 @@ jobs:
       - name: Publish to NPM
         run: |
           cd packages/app-server-sdk/npm
-          npm publish
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
