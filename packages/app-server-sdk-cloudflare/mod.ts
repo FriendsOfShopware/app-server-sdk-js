@@ -1,19 +1,23 @@
-import {ShopRepository} from "https://deno.land/x/shopware_app_server_sdk/repository.ts";
-import {Shop} from "../../shop";
+import { SimpleShop } from "https://deno.land/x/shopware_app_server_sdk/mod.ts";
+import type { ShopInterface, ShopRepositoryInterface } from "https://deno.land/x/shopware_app_server_sdk/mod.ts";
 
-export class CloudflareShopRepository implements ShopRepository {
+export class CloudflareShopRepository implements ShopRepositoryInterface {
     private storage: KVNamespace;
 
     constructor(storage: KVNamespace) {
         this.storage = storage;
     }
 
-    async createShop(shop: Shop) {
-        await this.storage.put(shop.id, JSON.stringify(shop));
+    createShopStruct(shopId: string, shopUrl: string, shopSecret: string): ShopInterface {
+        return new SimpleShop(shopId, shopUrl, shopSecret);
     }
 
-    async deleteShop(shop: Shop) {
-        await this.storage.delete(shop.id);
+    async createShop(shop: ShopInterface) {
+        await this.storage.put(shop.getShopId(), JSON.stringify(shop));
+    }
+
+    async deleteShop(id: string) {
+        await this.storage.delete(id);
     }
 
     async getShopById(id: string) {
@@ -25,17 +29,21 @@ export class CloudflareShopRepository implements ShopRepository {
 
         const obj = JSON.parse(kvObj);
 
-        return new Shop(
+        const shop =  new SimpleShop(
             obj.id || '',
             obj.shopUrl || '',
-            obj.shopSecret || '',
-            obj.clientId || '',
-            obj.clientSecret || '',
-            obj.customFields || {},
+            obj.shopSecret || ''
         )
+
+        shop.setShopCredentials(
+            obj.clientId || '',
+            obj.clientSecret || ''
+        );
+
+        return shop;
     }
 
-    async updateShop(shop: Shop) {
+    async updateShop(shop: ShopInterface) {
         return await this.createShop(shop);
     }
 }

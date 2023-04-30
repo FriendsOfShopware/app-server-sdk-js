@@ -9,6 +9,14 @@ await build({
   scriptModule: false,
   shims: {
     deno: false,
+    blob: false,
+    crypto: false,
+    domException: false,
+    prompts: false,
+    timers: false,
+    undici: false,
+    weakRef: false,
+    webSocket: false,
   },
   compilerOptions: {
     lib: ["es2022", "dom", "webworker"],

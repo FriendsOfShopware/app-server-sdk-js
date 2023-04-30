@@ -9,6 +9,31 @@ await build({
   scriptModule: false,
   shims: {
     deno: false,
+    blob: false,
+    crypto: false,
+    domException: false,
+    prompts: false,
+    timers: false,
+    undici: false,
+    weakRef: false,
+    webSocket: false,
+    custom: [{
+      package: {
+        name: "@cloudflare/workers-types",
+        version: "~4.20230404.0",
+      },
+      globalNames: [{
+        name: "KVNamespace",
+        typeOnly: true
+      }]
+    }]
+  },
+  mappings: {
+    "https://deno.land/x/shopware_app_server_sdk/mod.ts": {
+      name: "@friendsofshopware/app-server-sdk",
+      version: "^0.0.24",
+      peerDependency: false,
+    },
   },
   compilerOptions: {
     lib: ["es2022", "dom", "webworker"],
@@ -25,9 +50,5 @@ await build({
     bugs: {
       url: "https://github.com/FriendsOfShopware/app-server-sdk-js/issues",
     },
-  },
-  postBuild() {
-    Deno.copyFileSync("./README.md", "./npm/README.md");
-    Deno.copyFileSync("./LICENSE", "./npm/LICENSE");
-  },
+  }
 });

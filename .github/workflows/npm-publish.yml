@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  publish-core:
+  core:
     name: Publish Core Package
     runs-on: ubuntu-latest
     steps:
@@ -24,6 +24,28 @@ jobs:
       - name: Publish to NPM
         run: |
           cd packages/app-server-sdk/npm
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
+  cloudflare:
+    name: Publish Cloudflare Package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - name: Transform to NPM Package
+        run: |
+          cd packages/app-server-sdk-cloudflare
+          deno run -A scripts/build.ts ${{ github.event.release.tag_name }}
+      - name: Publish to NPM
+        run: |
+          cd packages/app-server-sdk-cloudflare/npm
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
