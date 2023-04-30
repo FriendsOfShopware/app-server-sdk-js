@@ -8,7 +8,7 @@ export class AppServer {
   public contextResolver: ContextResolver;
 
   constructor(
-    public cfg: IAppConfig,
+    public cfg: AppConfigurationInterface,
     public repository: ShopRepositoryInterface,
     public signer: HmacSigner,
   ) {
@@ -17,7 +17,7 @@ export class AppServer {
   }
 }
 
-export interface IAppConfig {
+export interface AppConfigurationInterface {
   /**
    * Your app name
    */

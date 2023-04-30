@@ -10,7 +10,7 @@ export class HttpClient {
     };
   }
 
-  async get(url: string, headers: object = {}): Promise<HttpResponse> {
+  async get(url: string, headers: object = {}): Promise<HttpClientResponse> {
     return await this.request("GET", url, null, headers);
   }
 
@@ -18,7 +18,7 @@ export class HttpClient {
     url: string,
     json: object = {},
     headers: any = {},
-  ): Promise<HttpResponse> {
+  ): Promise<HttpClientResponse> {
     headers["content-type"] = "application/json";
     headers["accept"] = "application/json";
 
@@ -29,7 +29,7 @@ export class HttpClient {
     url: string,
     json: object = {},
     headers: any = {},
-  ): Promise<HttpResponse> {
+  ): Promise<HttpClientResponse> {
     headers["content-type"] = "application/json";
     headers["accept"] = "application/json";
 
@@ -40,7 +40,7 @@ export class HttpClient {
     url: string,
     json: object = {},
     headers: any = {},
-  ): Promise<HttpResponse> {
+  ): Promise<HttpClientResponse> {
     headers["content-type"] = "application/json";
     headers["accept"] = "application/json";
 
@@ -51,7 +51,7 @@ export class HttpClient {
     url: string,
     json: object = {},
     headers: any = {},
-  ): Promise<HttpResponse> {
+  ): Promise<HttpClientResponse> {
     headers["content-type"] = "application/json";
     headers["accept"] = "application/json";
 
@@ -63,7 +63,7 @@ export class HttpClient {
     url: string,
     body: string | null = "",
     headers: object = {},
-  ): Promise<HttpResponse> {
+  ): Promise<HttpClientResponse> {
     const fHeaders: any = Object.assign({}, headers);
     fHeaders["Authorization"] = `Bearer ${await this.getToken()}`;
 
@@ -84,15 +84,15 @@ export class HttpClient {
     } else if (!f.ok) {
       throw new ApiClientRequestFailed(
         this.shop.getShopId(),
-        new HttpResponse(f.status, await f.json(), f.headers),
+        new HttpClientResponse(f.status, await f.json(), f.headers),
       );
     }
 
     if (f.status === 204) {
-      return new HttpResponse(f.status, {}, f.headers);
+      return new HttpClientResponse(f.status, {}, f.headers);
     }
 
-    return new HttpResponse(f.status, await f.json(), f.headers);
+    return new HttpClientResponse(f.status, await f.json(), f.headers);
   }
 
   async getToken(): Promise<string> {
@@ -115,7 +115,7 @@ export class HttpClient {
       if (!auth.ok) {
         throw new ApiClientAuthenticationFailed(
           this.shop.getShopId(),
-          new HttpResponse(auth.status, await auth.json(), auth.headers),
+          new HttpClientResponse(auth.status, await auth.json(), auth.headers),
         );
       }
 
@@ -143,7 +143,7 @@ export class HttpClient {
   }
 }
 
-export class HttpResponse {
+export class HttpClientResponse {
   constructor(
     public statusCode: number,
     public body: any,
@@ -153,13 +153,13 @@ export class HttpResponse {
 }
 
 export class ApiClientAuthenticationFailed extends Error {
-  constructor(shopId: string, public response: HttpResponse) {
+  constructor(shopId: string, public response: HttpClientResponse) {
     super(`The api client authentication to shop with id: ${shopId}`);
   }
 }
 
 export class ApiClientRequestFailed extends Error {
-  constructor(shopId: string, public response: HttpResponse) {
+  constructor(shopId: string, public response: HttpClientResponse) {
     super(
       `The api request failed with status code: ${response.statusCode} for shop with id: ${shopId}`,
     );
