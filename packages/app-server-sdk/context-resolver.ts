@@ -1,6 +1,6 @@
 import { AppServer } from "./app.ts";
 import { HttpClient } from "./http-client.ts";
-import { IShop } from "./repository.ts";
+import { ShopInterface } from "./repository.ts";
 
 export class ContextResolver {
   constructor(private app: AppServer) {}
@@ -52,7 +52,7 @@ export class ContextResolver {
 
 class Context {
   constructor(
-    public shop: IShop,
+    public shop: ShopInterface,
     public payload: any,
     public httpClient: HttpClient,
   ) {

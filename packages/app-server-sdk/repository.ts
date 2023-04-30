@@ -1,4 +1,4 @@
-export interface IShop {
+export interface ShopInterface {
   getShopId(): string;
   getShopUrl(): string;
   getShopSecret(): string;
@@ -7,19 +7,19 @@ export interface IShop {
   setShopCredentials(clientId: string, clientSecret: string): void;
 }
 
-export interface IShopRepository {
-  createShopStruct(shopId: string, shopUrl: string, shopSecret: string): IShop;
+export interface ShopRepositoryInterface {
+  createShopStruct(shopId: string, shopUrl: string, shopSecret: string): ShopInterface;
 
-  createShop(shop: IShop): Promise<void>;
+  createShop(shop: ShopInterface): Promise<void>;
 
-  getShopById(id: string): Promise<IShop | null>;
+  getShopById(id: string): Promise<ShopInterface | null>;
 
-  updateShop(shop: IShop): Promise<void>;
+  updateShop(shop: ShopInterface): Promise<void>;
 
   deleteShop(id: string): Promise<void>;
 }
 
-export class SimpleShop implements IShop {
+export class SimpleShop implements ShopInterface {
   private shopId: string;
   private shopUrl: string;
   private shopSecret: string;
@@ -55,30 +55,30 @@ export class SimpleShop implements IShop {
   }
 }
 
-export class InMemoryShopRepository implements IShopRepository {
-  private storage: Map<string, IShop>;
+export class InMemoryShopRepository implements ShopRepositoryInterface {
+  private storage: Map<string, ShopInterface>;
 
   constructor() {
-    this.storage = new Map<string, IShop>();
+    this.storage = new Map<string, ShopInterface>();
   }
 
-  createShopStruct(shopId: string, shopUrl: string, shopSecret: string): IShop {
+  createShopStruct(shopId: string, shopUrl: string, shopSecret: string): ShopInterface {
     return new SimpleShop(shopId, shopUrl, shopSecret);
   }
 
-  async createShop(shop: IShop) {
+  async createShop(shop: ShopInterface) {
     this.storage.set(shop.getShopId(), shop);
   }
 
   async getShopById(id: string) {
     if (this.storage.has(id)) {
-      return this.storage.get(id) as IShop;
+      return this.storage.get(id) as ShopInterface;
     }
 
     return null;
   }
 
-  async updateShop(shop: IShop) {
+  async updateShop(shop: ShopInterface) {
     await this.createShop(shop);
   }
 

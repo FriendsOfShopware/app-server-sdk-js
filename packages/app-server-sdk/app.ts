@@ -1,6 +1,6 @@
 import { Registration } from "./registration.ts";
 import { HmacSigner } from "./signer.ts";
-import { IShopRepository } from "./repository.ts";
+import { ShopRepositoryInterface } from "./repository.ts";
 import { ContextResolver } from "./context-resolver.ts";
 
 export class AppServer {
@@ -9,7 +9,7 @@ export class AppServer {
 
   constructor(
     public cfg: IAppConfig,
-    public repository: IShopRepository,
+    public repository: ShopRepositoryInterface,
     public signer: HmacSigner,
   ) {
     this.registration = new Registration(this);

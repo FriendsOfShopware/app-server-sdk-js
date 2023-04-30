@@ -1,9 +1,9 @@
-import { IShop } from "./repository.ts";
+import { ShopInterface } from "./repository.ts";
 
 export class HttpClient {
   private storage: { expiresIn: Date | null; token: string | null };
 
-  constructor(private shop: IShop) {
+  constructor(private shop: ShopInterface) {
     this.storage = {
       token: null,
       expiresIn: null,
