@@ -48,7 +48,7 @@ export class CloudflareShopRepository implements ShopRepositoryInterface {
     const obj = JSON.parse(data);
 
     const shop = new SimpleShop(
-      obj.id || "",
+      obj.shopId || "",
       obj.shopUrl || "",
       obj.shopSecret || "",
     );
