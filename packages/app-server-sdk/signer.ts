@@ -1,4 +1,4 @@
-export abstract class HmacSigner {
+export abstract class AbstractHmacSigner {
   abstract sign(message: string, secret: string): Promise<string>;
   abstract verify(
     signature: string,
@@ -14,16 +14,15 @@ export abstract class HmacSigner {
   }
 
   async verifyGetRequest(request: Request, secret: string) {
-    // @ts-ignore
-    const params = new URLSearchParams(request.query);
-    const signature = params.get("shopware-shop-signature") as string;
-    params.delete("shopware-shop-signature");
+    const url = new URL(request.url);
+    const signature = url.searchParams.get("shopware-shop-signature") as string;
+    url.searchParams.delete("shopware-shop-signature");
 
-    return await this.verify(signature, params.toString(), secret);
+    return await this.verify(signature, url.searchParams.toString(), secret);
   }
 }
 
-export class WebCryptoHmacSigner extends HmacSigner {
+export class WebCryptoHmacSigner extends AbstractHmacSigner {
   private encoder: TextEncoder;
   private keyCache: Map<string, CryptoKey>;
 
