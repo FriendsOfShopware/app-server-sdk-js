@@ -1,5 +1,6 @@
 {
   "name": "node-example",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,13 +12,16 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "node-fetch": "^3.1.1",
-    "shopware-app-server-sdk": "0.0.5"
+    "@friendsofshopware/app-server-sdk": "0.0.28",
+    "@friendsofshopware/app-server-sdk-express": "0.0.28"
   },
   "devDependencies": {
     "typescript": "^4.3.5",
     "@types/express": "^4.17.13",
     "@types/node": "^16.6.2",
     "ts-node": "^10.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

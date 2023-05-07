@@ -16,12 +16,16 @@ export function convertRequest(expressRequest: express.Request): Request {
         headers.set(key, value as string);
     }
 
-    return new Request(expressRequest.url, {
+    const options: {headers: Headers, method: string, body?: string} = {
         headers,
         method: expressRequest.method,
-        // @ts-ignore
-        body: expressRequest.rawBody || '',
-    });
+    };
+
+    if (expressRequest.rawBody) {
+        options.body = expressRequest.rawBody;
+    }
+
+    return new Request(expressRequest.protocol + '://' + expressRequest.get('host') + expressRequest.originalUrl, options);
 }
 
 export function rawRequestMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
