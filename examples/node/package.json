@@ -12,8 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "@friendsofshopware/app-server-sdk": "0.0.28",
-    "@friendsofshopware/app-server-sdk-express": "0.0.28"
+    "@friendsofshopware/app-server-sdk": "^0.0.30",
+    "@friendsofshopware/app-server-sdk-express": "^0.0.30"
   },
   "devDependencies": {
     "typescript": "^4.3.5",
