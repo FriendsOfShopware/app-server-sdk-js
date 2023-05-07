@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "module": "commonjs",
+    "module": "ESNext",
     "target": "esnext",
     "lib": ["esnext", "webworker", "dom"],
     "alwaysStrict": true,
@@ -11,9 +11,7 @@
     "sourceMap": true,
     "esModuleInterop": true,
     "types": [
-      "@cloudflare/workers-types",
-      "@types/jest",
-      "@types/service-worker-mock"
+      "@cloudflare/workers-types"
     ]
   },
   "include": ["src"],

@@ -21,7 +21,9 @@ export function convertRequest(expressRequest: express.Request): Request {
         method: expressRequest.method,
     };
 
+    // @ts-ignore
     if (expressRequest.rawBody) {
+        // @ts-ignore
         options.body = expressRequest.rawBody;
     }
 
