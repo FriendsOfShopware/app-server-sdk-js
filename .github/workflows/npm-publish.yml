@@ -15,6 +15,7 @@ jobs:
           - 'app-server-sdk'
           - 'app-server-sdk-cloudflare'
           - 'app-server-sdk-express'
+          - 'app-server-sdk-hono'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
