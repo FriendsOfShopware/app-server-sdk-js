@@ -1,10 +1,11 @@
-export abstract class AbstractHmacSigner {
-  abstract sign(message: string, secret: string): Promise<string>;
-  abstract verify(
-    signature: string,
-    data: string,
-    secret: string,
-  ): Promise<boolean>;
+export class WebCryptoHmacSigner {
+  private encoder: TextEncoder;
+  private keyCache: Map<string, CryptoKey>;
+
+  constructor() {
+    this.encoder = new TextEncoder();
+    this.keyCache = new Map<string, CryptoKey>();
+  }
 
   async signResponse(response: Response, secret: string): Promise<void> {
     response.headers.set(
@@ -19,17 +20,6 @@ export abstract class AbstractHmacSigner {
     url.searchParams.delete("shopware-shop-signature");
 
     return await this.verify(signature, url.searchParams.toString(), secret);
-  }
-}
-
-export class WebCryptoHmacSigner extends AbstractHmacSigner {
-  private encoder: TextEncoder;
-  private keyCache: Map<string, CryptoKey>;
-
-  constructor() {
-    super();
-    this.encoder = new TextEncoder();
-    this.keyCache = new Map<string, CryptoKey>();
   }
 
   async getKeyForSecret(secret: string) {
