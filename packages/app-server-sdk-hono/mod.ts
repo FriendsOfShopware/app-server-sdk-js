@@ -70,6 +70,12 @@ export function configureAppServer(
   hono.use(cfg.appPath, async (ctx, next) => {
     const app = ctx.get("app") as AppServer;
 
+    // Don't validate signature for registration
+    if (ctx.req.path === cfg.registrationUrl || ctx.req.path === cfg.registerConfirmationUrl) {
+      await next();
+      return;
+    }
+
     let context;
     try {
       context = ctx.req.method === "GET"
@@ -100,7 +106,7 @@ export function configureAppServer(
   });
 
   hono.get(cfg.registrationUrl, async (ctx) => {
-    const app = ctx.get("app") as AppServer;
+    const app = ctx.get("app");
 
     try {
       return await app.registration.authorize(ctx.req.raw);
@@ -112,7 +118,7 @@ export function configureAppServer(
   });
 
   hono.post(cfg.registerConfirmationUrl, async (ctx) => {
-    const app = ctx.get("app") as AppServer;
+    const app = ctx.get("app");
 
     try {
       return await app.registration.authorizeCallback(ctx.req.raw);
