@@ -50,7 +50,7 @@ export class ContextResolver {
   }
 }
 
-class Context {
+export class Context {
   constructor(
     public shop: ShopInterface,
     public payload: any,
