@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/Framework/App/Manifest/Schema/manifest-1.0.xsd">
+    <meta>
+        <name>Test</name>
+        <label>Test</label>
+        <label lang="de-DE">Test</label>
+        <description>Test</description>
+        <description lang="de-DE">Test</description>
+        <author>Shyim</author>
+        <copyright>Shyim</copyright>
+        <version>0.0.12</version>
+        <icon>icon.png</icon>
+        <license>MIT</license>
+    </meta>
+    <setup>
+        <registrationUrl>https://sw-app-test.deno.dev/app/register</registrationUrl>
+        <secret>Test</secret>
+    </setup>
+    <admin>
+        <action-button action="test" entity="product" view="detail" url="https://sw-app-test.deno.dev/app/product">
+            <label>Test</label>
+        </action-button>
+    </admin>
+</manifest>
