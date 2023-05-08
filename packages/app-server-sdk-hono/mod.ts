@@ -41,11 +41,7 @@ export function configureAppServer(
 
   hono.use(async (ctx, next) => {
     if (app === null) {
-      const appUrl = cfg.appUrl ||
-        ctx.req.url.substring(
-          0,
-          ctx.req.url.length - (new URL(ctx.req.url).pathname.length),
-        );
+      const appUrl = cfg.appUrl || buildBaseUrl(ctx.req.url);
 
       if (typeof cfg.shopRepository === "function") {
         // @ts-ignore
@@ -128,4 +124,10 @@ export function configureAppServer(
       });
     }
   });
+}
+
+function buildBaseUrl(url: string): string {
+  const u = new URL(url);
+
+  return `${u.protocol}//${u.host}`;
 }
