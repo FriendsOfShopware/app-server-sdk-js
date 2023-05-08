@@ -5,8 +5,6 @@ import type {
 } from "https://deno.land/x/hono@v3.1.8/mod.ts";
 import {
   AppServer,
-  Context,
-  ShopInterface,
   ShopRepositoryInterface,
 } from "https://deno.land/x/shopware_app_server_sdk@0.0.32/mod.ts";
 
@@ -22,16 +20,10 @@ interface MiddlewareConfig {
     | ((c: HonoContext) => ShopRepositoryInterface);
 }
 
-type Variables = {
-  app: AppServer;
-  shop: ShopInterface;
-  context: Context;
-};
-
 let app: AppServer | null = null;
 
 export function configureAppServer(
-  hono: Hono<{ Variables: Variables }>,
+  hono: Hono,
   cfg: MiddlewareConfig,
 ) {
   cfg.registrationUrl = cfg.registrationUrl || "/app/register";
@@ -62,12 +54,14 @@ export function configureAppServer(
       );
     }
 
+    // @ts-ignore
     ctx.set("app", app);
 
     await next();
   });
 
   hono.use(cfg.appPath, async (ctx, next) => {
+    // @ts-ignore
     const app = ctx.get("app") as AppServer;
 
     // Don't validate signature for registration
@@ -87,16 +81,18 @@ export function configureAppServer(
       });
     }
 
+    // @ts-ignore
     ctx.set("shop", context.shop);
+    // @ts-ignore
     ctx.set("context", context);
 
     await next();
 
     const cloned = ctx.res.clone();
 
-    await ctx.get("app").signer.signResponse(
+    await app.signer.signResponse(
       cloned,
-      ctx.get("shop").getShopSecret(),
+      context.shop.getShopSecret(),
     );
 
     ctx.header(
@@ -106,7 +102,8 @@ export function configureAppServer(
   });
 
   hono.get(cfg.registrationUrl, async (ctx) => {
-    const app = ctx.get("app");
+    // @ts-ignore
+    const app = ctx.get("app") as AppServer;
 
     try {
       return await app.registration.authorize(ctx.req.raw);
@@ -118,7 +115,8 @@ export function configureAppServer(
   });
 
   hono.post(cfg.registerConfirmationUrl, async (ctx) => {
-    const app = ctx.get("app");
+    // @ts-ignore
+    const app = ctx.get("app") as AppServer;
 
     try {
       return await app.registration.authorizeCallback(ctx.req.raw);
