@@ -8,7 +8,7 @@ import {
   Context,
   ShopInterface,
   ShopRepositoryInterface,
-} from "https://deno.land/x/shopware_app_server_sdk@0.0.32/mod.ts";
+} from "https://deno.land/x/shopware_app_server_sdk@0.0.40/mod.ts";
 
 interface MiddlewareConfig {
   appName: string;

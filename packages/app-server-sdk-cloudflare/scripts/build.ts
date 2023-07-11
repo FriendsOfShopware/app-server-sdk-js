@@ -7,6 +7,7 @@ await build({
   outDir: "./npm",
   test: false,
   scriptModule: false,
+  declaration: 'separate',
   shims: {
     deno: false,
     blob: false,
@@ -21,7 +22,7 @@ await build({
   mappings: {
     "https://deno.land/x/shopware_app_server_sdk/mod.ts": {
       name: "@friendsofshopware/app-server-sdk",
-      version: "^0.0.39",
+      version: "^0.0.40",
       peerDependency: false,
     },
   },

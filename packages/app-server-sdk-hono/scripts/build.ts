@@ -7,6 +7,7 @@ await build({
   outDir: "./npm",
   test: false,
   scriptModule: false,
+  declaration: 'separate',
   shims: {
     deno: false,
     blob: false,
@@ -29,9 +30,9 @@ await build({
       version: "^3.1.8",
       subPath: "http-exception",
     },
-    "https://deno.land/x/shopware_app_server_sdk@0.0.39/mod.ts": {
+    "https://deno.land/x/shopware_app_server_sdk@0.0.40/mod.ts": {
       name: "@friendsofshopware/app-server-sdk",
-      version: "^0.0.39",
+      version: "^0.0.40",
       peerDependency: false,
     },
   },
