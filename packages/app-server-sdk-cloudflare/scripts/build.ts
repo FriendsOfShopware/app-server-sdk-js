@@ -21,7 +21,7 @@ await build({
   mappings: {
     "https://deno.land/x/shopware_app_server_sdk/mod.ts": {
       name: "@friendsofshopware/app-server-sdk",
-      version: "^0.0.24",
+      version: "^0.0.39",
       peerDependency: false,
     },
   },

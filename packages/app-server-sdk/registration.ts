@@ -12,7 +12,7 @@ export class Registration {
       !url.searchParams.has("shop-id") ||
       !url.searchParams.has("timestamp")
     ) {
-      throw new Error("Invalid Request");
+      return new InvalidRequestResponse('Invalid Request');
     }
 
     const v = await this.app.signer.verify(
@@ -24,7 +24,7 @@ export class Registration {
     );
 
     if (!v) {
-      throw new Error("Cannot validate app signature");
+      return new InvalidRequestResponse('Cannot validate app signature');
     }
 
     const shop = this.app.repository.createShopStruct(
@@ -63,13 +63,13 @@ export class Registration {
       typeof body.secretKey !== "string" ||
       !req.headers.has("shopware-shop-signature")
     ) {
-      throw new Error("Invalid Request");
+      return new InvalidRequestResponse('Invalid Request');
     }
 
     const shop = await this.app.repository.getShopById(body.shopId as string);
 
     if (shop === null) {
-      throw new Error(`Cannot find shop for this id: ${body.shopId}`);
+      return new InvalidRequestResponse('Invalid shop given');
     }
 
     const v = await this.app.signer.verify(
@@ -81,7 +81,7 @@ export class Registration {
       // Shop has failed the verify. Delete it from our DB
       await this.app.repository.deleteShop(shop.getShopId());
 
-      throw new Error("Cannot validate app signature");
+      return new InvalidRequestResponse('Cannot validate app signature');
     }
 
     shop.setShopCredentials(body.apiKey, body.secretKey);
@@ -96,4 +96,15 @@ export function randomString() {
   const f = () => Math.random().toString(36).substring(2);
 
   return f() + f();
+}
+
+class InvalidRequestResponse extends Response {
+  constructor(message: string, status = 401) {
+    super(JSON.stringify({ message }), {
+      status,
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+  }
 }
