@@ -92,10 +92,15 @@ export class Registration {
   }
 }
 
-export function randomString() {
-  const f = () => Math.random().toString(36).substring(2);
+export function randomString(length = 120) {
+  let result           = '';
+  const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
 
-  return f() + f();
+  return result;
 }
 
 class InvalidRequestResponse extends Response {
