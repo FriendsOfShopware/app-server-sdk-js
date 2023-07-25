@@ -1,5 +1,14 @@
+import { Hono } from "hono";
 import {AppServer, AppConfigurationInterface} from "@friendsofshopware/app-server-sdk";
 import {CloudflareShopRepository} from "@friendsofshopware/app-server-sdk-cloudflare";
+
+type Variables = {
+  app: AppServer;
+  shop: ShopInterface;
+  context: Context;
+}
+
+const app = new Hono<{ Variables: Variables }>()
 
 const cfg: AppConfigurationInterface = {
     appName: 'Test',
