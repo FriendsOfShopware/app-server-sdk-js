@@ -7,6 +7,7 @@ await build({
   outDir: "./npm",
   test: false,
   scriptModule: false,
+  typeCheck: false,
   declaration: 'separate',
   shims: {
     deno: false,
@@ -22,12 +23,12 @@ await build({
   mappings: {
     "https://deno.land/x/shopware_app_server_sdk/mod.ts": {
       name: "@friendsofshopware/app-server-sdk",
-      version: "^0.0.40",
+      version: "~0.0.43",
       peerDependency: false,
     },
   },
   compilerOptions: {
-    lib: ["es2022", "dom", "webworker"],
+    lib: ["ES2021", "DOM", "WebWorker"],
   },
   package: {
     name: "@friendsofshopware/app-server-sdk-cloudflare",

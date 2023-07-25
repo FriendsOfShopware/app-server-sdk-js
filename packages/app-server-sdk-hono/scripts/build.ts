@@ -7,6 +7,7 @@ await build({
   outDir: "./npm",
   test: false,
   scriptModule: false,
+  typeCheck: false,
   declaration: 'separate',
   shims: {
     deno: false,
