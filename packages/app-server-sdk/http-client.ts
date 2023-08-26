@@ -113,9 +113,18 @@ export class HttpClient {
       );
 
       if (!auth.ok) {
+        const contentType = auth.headers.get('content-type') || 'text/plain';
+        let body = '';
+
+        if (contentType.indexOf('application/json') != -1) {
+          body = await auth.json();
+        } else {
+          body = await auth.text();
+        }
+
         throw new ApiClientAuthenticationFailed(
           this.shop.getShopId(),
-          new HttpClientResponse(auth.status, await auth.json(), auth.headers),
+          new HttpClientResponse(auth.status, body, auth.headers),
         );
       }
 
