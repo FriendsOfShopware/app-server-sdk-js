@@ -1,4 +1,4 @@
-import {AppServer, AppConfigurationInterface, InMemoryShopRepository} from "@friendsofshopware/app-server-sdk";
+import {AppServer, AppConfigurationInterface, InMemoryShopRepository, WebCryptoHmacSigner} from "@friendsofshopware/app-server-sdk";
 import express from 'express';
 import {convertRequest, convertResponse, rawRequestMiddleware} from '@friendsofshopware/app-server-sdk-express';
 
@@ -10,7 +10,7 @@ const cfg: AppConfigurationInterface = {
     authorizeCallbackUrl: 'http://app-server.dev.localhost/authorize/callback'
 };
 
-const appServer = new AppServer(cfg, new InMemoryShopRepository);
+const appServer = new AppServer(cfg, new InMemoryShopRepository, new WebCryptoHmacSigner);
 
 app.use(rawRequestMiddleware);
 
