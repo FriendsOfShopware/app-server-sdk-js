@@ -16,24 +16,19 @@ This SDK is written in pure Typescript with portability in mind being able to us
 See `examples/node` folder for a full example
 
 ```typescript
-import {App} from "shopware-app-server-sdk";
-import {Config} from "shopware-app-server-sdk/config";
-import {InMemoryShopRepository} from "shopware-app-server-sdk/repository";
+import {AppServer, AppConfigurationInterface, InMemoryShopRepository, WebCryptoHmacSigner} from "@friendsofshopware/app-server-sdk";
 import express from 'express';
-import {convertRequest, convertResponse, rawRequestMiddleware} from 'shopware-app-server-sdk/runtime/node/express';
-import {NodeHmacSigner} from 'shopware-app-server-sdk/runtime/node/signer';
-
-globalThis.fetch = require('node-fetch');
+import {convertRequest, convertResponse, rawRequestMiddleware} from '@friendsofshopware/app-server-sdk-express';
 
 const app = express();
 
-const cfg: Config = {
+const cfg: AppConfigurationInterface = {
     appName: 'Test',
     appSecret: 'testSecret',
     authorizeCallbackUrl: 'http://app-server.dev.localhost/authorize/callback'
 };
 
-const appServer = new App(cfg, new InMemoryShopRepository, new NodeHmacSigner);
+const appServer = new AppServer(cfg, new InMemoryShopRepository, new WebCryptoHmacSigner);
 
 app.use(rawRequestMiddleware);
 

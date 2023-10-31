@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import {AppServer, AppConfigurationInterface} from "@friendsofshopware/app-server-sdk";
+import {AppServer, AppConfigurationInterface, WebCryptoHmacSigner} from "@friendsofshopware/app-server-sdk";
 import {CloudflareShopRepository} from "@friendsofshopware/app-server-sdk-cloudflare";
 
 type Variables = {
@@ -24,7 +24,7 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
-    const app = new AppServer(cfg, new CloudflareShopRepository(env.shopStorage));
+    const app = new AppServer(cfg, new CloudflareShopRepository(env.shopStorage), new WebCryptoHmacSigner);
 
     if (url.pathname.startsWith('/authorize/callback')) {
         return await app.registration.authorizeCallback(request);
