@@ -14,7 +14,7 @@
     "@friendsofshopware/app-server-sdk": "~0.0.41",
     "@friendsofshopware/app-server-sdk-cloudflare": "~0.0.41",
     "@friendsofshopware/app-server-sdk-hono": "~0.0.41",
-    "hono": "~3.3.3"
+    "hono": "~3.11.7"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230717.1",
