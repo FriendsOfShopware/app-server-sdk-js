@@ -7,20 +7,20 @@ const app = express();
 const cfg: AppConfigurationInterface = {
     appName: 'Test',
     appSecret: 'testSecret',
-    authorizeCallbackUrl: 'http://app-server.dev.localhost/authorize/callback'
+    authorizeCallbackUrl: 'http://localhost:8080/app/lifecycle/register/callback'
 };
 
-const appServer = new AppServer(cfg, new InMemoryShopRepository, new WebCryptoHmacSigner);
+const appServer = new AppServer(cfg, new InMemoryShopRepository);
 
 app.use(rawRequestMiddleware);
 
-app.get('/authorize', async (req, res) => {
+app.get('/app/lifecycle/register', async (req, res) => {
     const resp = await appServer.registration.authorize(convertRequest(req));
 
     convertResponse(resp, res);
 });
 
-app.post('/authorize/callback', async (req, res) => {
+app.post('/app/lifecycle/register/callback', async (req, res) => {
     const resp = await appServer.registration.authorizeCallback(convertRequest(req));
 
     convertResponse(resp, res);
