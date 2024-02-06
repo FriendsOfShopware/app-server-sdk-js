@@ -21,14 +21,14 @@ await build({
     webSocket: false,
   },
   mappings: {
-    "https://deno.land/x/hono@v3.1.8/mod.ts": {
+    "https://deno.land/x/hono@v3.12.11/mod.ts": {
       name: "hono",
-      version: "^3.1.8",
+      version: "^3.12.11",
       peerDependency: false,
     },
-    "https://deno.land/x/hono@v3.1.8/http-exception.ts": {
+    "https://deno.land/x/hono@v3.12.11/http-exception.ts": {
       name: "hono",
-      version: "^3.1.8",
+      version: "^3.12.11",
       subPath: "http-exception",
     },
     "https://deno.land/x/shopware_app_server_sdk@0.0.40/mod.ts": {

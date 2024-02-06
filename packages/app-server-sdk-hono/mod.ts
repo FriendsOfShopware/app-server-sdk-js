@@ -1,8 +1,8 @@
-import { HTTPException } from "https://deno.land/x/hono@v3.1.8/http-exception.ts";
+import { HTTPException } from "https://deno.land/x/hono@v3.12.11/http-exception.ts";
 import type {
   Context as HonoContext,
   Hono,
-} from "https://deno.land/x/hono@v3.1.8/mod.ts";
+} from "https://deno.land/x/hono@v3.12.11/mod.ts";
 import {
   AppServer,
   Context,
@@ -22,16 +22,18 @@ interface MiddlewareConfig {
     | ((c: HonoContext) => ShopRepositoryInterface);
 }
 
-type Variables = {
-  app: AppServer;
-  shop: ShopInterface;
-  context: Context;
-};
+declare module 'hono' {
+  interface ContextVariableMap {
+    app: AppServer;
+    shop: ShopInterface;
+    context: Context;
+  }
+}
 
 let app: AppServer | null = null;
 
 export function configureAppServer(
-  hono: Hono<{ Variables: Variables }>,
+  hono: Hono,
   cfg: MiddlewareConfig,
 ) {
   cfg.registrationUrl = cfg.registrationUrl || "/app/register";
@@ -39,7 +41,7 @@ export function configureAppServer(
     "/app/register/confirm";
   cfg.appPath = cfg.appPath || "/app/*";
 
-  hono.use(async (ctx, next) => {
+  hono.use('*', async (ctx, next) => {
     if (app === null) {
       const appUrl = cfg.appUrl || buildBaseUrl(ctx.req.url);
 
