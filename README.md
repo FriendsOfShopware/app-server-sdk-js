@@ -7,9 +7,11 @@ This SDK is written in pure Typescript with portability in mind being able to us
 - Provides registration process for app
 - Verify and signing of requests / responses
 - preconfigured API Client
-- Complete Registration Handshake between Shopware and this 
+- Complete Registration Handshake between Shopware and this
 
 ## How to use it?
+
+Checkout examples folder for all examples.
 
 ### NodeJS example
 

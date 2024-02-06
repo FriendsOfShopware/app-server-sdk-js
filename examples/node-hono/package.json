@@ -1,0 +1,23 @@
+{
+  "name": "shopware-hono",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch index.ts",
+    "start": "tsx index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@friendsofshopware/app-server-sdk": "^0.0.47",
+    "@friendsofshopware/app-server-sdk-hono": "^0.0.47",
+    "@hono/node-server": "^1.7.0",
+    "hono": "^3.12.11"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
