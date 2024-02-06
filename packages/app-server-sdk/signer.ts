@@ -1,5 +1,3 @@
-import crypto from 'crypto'
-
 export class WebCryptoHmacSigner {
   private encoder: TextEncoder;
   private keyCache: Map<string, CryptoKey>;
