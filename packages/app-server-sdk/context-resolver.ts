@@ -2,9 +2,16 @@ import { AppServer } from "./app.ts";
 import { HttpClient } from "./http-client.ts";
 import { ShopInterface } from "./repository.ts";
 
+/**
+* ContextResolver is a helper class to create a Context object from a request.
+* The context contains the shop, the payload and an instance of the HttpClient
+*/
 export class ContextResolver {
   constructor(private app: AppServer) {}
 
+  /**
+  * Create a context from a request bodty
+  */
   public async fromSource(req: Request): Promise<Context> {
     const webHookContent = await req.text();
     const webHookBody = JSON.parse(webHookContent);
@@ -26,6 +33,10 @@ export class ContextResolver {
     return new Context(shop, webHookBody, new HttpClient(shop));
   }
 
+  /**
+  * Create a context from a request query parameters
+  * This is usually a module request from the shopware admin
+  */
   public async fromModule(req: Request): Promise<Context> {
     const url = new URL(req.url);
 
@@ -50,6 +61,9 @@ export class ContextResolver {
   }
 }
 
+/**
+* Context is the parsed data from the request
+*/
 export class Context {
   constructor(
     public shop: ShopInterface,

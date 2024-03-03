@@ -3,13 +3,16 @@ import { WebCryptoHmacSigner } from "./signer.ts";
 import { ShopRepositoryInterface } from "./repository.ts";
 import { ContextResolver } from "./context-resolver.ts";
 
+/**
+* AppServer is the main class, this is where you start your app
+*/
 export class AppServer {
   public registration: Registration;
   public contextResolver: ContextResolver;
   public signer: WebCryptoHmacSigner;
 
   constructor(
-    public cfg: AppConfigurationInterface,
+    public cfg: Configuration,
     public repository: ShopRepositoryInterface
   ) {
     this.registration = new Registration(this);
@@ -18,7 +21,7 @@ export class AppServer {
   }
 }
 
-export interface AppConfigurationInterface {
+interface Configuration {
   /**
    * Your app name
    */

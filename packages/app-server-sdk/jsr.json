@@ -1,0 +1,5 @@
+{
+  "name": "@friendsofshopware/app-server",
+  "version": "0.0.48",
+  "exports": "./mod.ts"
+}

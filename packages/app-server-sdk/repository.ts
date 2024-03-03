@@ -1,3 +1,6 @@
+/**
+* ShopInterface defines the object that given back from the ShopRepository, it should methods to get the shop data and set them
+*/
 export interface ShopInterface {
   getShopId(): string;
   getShopUrl(): string;
@@ -7,6 +10,10 @@ export interface ShopInterface {
   setShopCredentials(clientId: string, clientSecret: string): void;
 }
 
+/**
+* ShopRepositoryInterface is the storage interface for the shops, you should implement this to save the shop data to your database
+* For testing cases the InMemoryShopRepository can be used
+*/
 export interface ShopRepositoryInterface {
   createShopStruct(shopId: string, shopUrl: string, shopSecret: string): ShopInterface;
 
@@ -19,6 +26,9 @@ export interface ShopRepositoryInterface {
   deleteShop(id: string): Promise<void>;
 }
 
+/**
+* SimpleShop is a simple implementation of the ShopInterface, it stores the shop data in memory
+*/
 export class SimpleShop implements ShopInterface {
   private shopId: string;
   private shopUrl: string;
@@ -70,7 +80,7 @@ export class InMemoryShopRepository implements ShopRepositoryInterface {
     this.storage.set(shop.getShopId(), shop);
   }
 
-  async getShopById(id: string) {
+  async getShopById(id: string): Promise<ShopInterface|null> {
     if (this.storage.has(id)) {
       return this.storage.get(id) as ShopInterface;
     }
@@ -87,6 +97,9 @@ export class InMemoryShopRepository implements ShopRepositoryInterface {
   }
 }
 
+/**
+* DenoKVRepository is a ShopRepositoryInterface implementation that uses the Deno KV storage to save the shop data
+*/
 export class DenoKVRepository implements ShopRepositoryInterface {
   constructor(private namespace = "shops") {}
 
@@ -143,4 +156,3 @@ export class DenoKVRepository implements ShopRepositoryInterface {
     await kv.delete([this.namespace, id]);
   }
 }
-

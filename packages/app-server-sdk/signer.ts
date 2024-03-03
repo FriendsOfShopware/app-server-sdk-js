@@ -14,7 +14,7 @@ export class WebCryptoHmacSigner {
     );
   }
 
-  async verifyGetRequest(request: Request, secret: string) {
+  async verifyGetRequest(request: Request, secret: string): Promise<boolean> {
     const url = new URL(request.url);
     const signature = url.searchParams.get("shopware-shop-signature") as string;
     url.searchParams.delete("shopware-shop-signature");
@@ -22,9 +22,9 @@ export class WebCryptoHmacSigner {
     return await this.verify(signature, url.searchParams.toString(), secret);
   }
 
-  async getKeyForSecret(secret: string) {
+  async getKeyForSecret(secret: string): Promise<CryptoKey> {
     if (this.keyCache.has(secret)) {
-      return this.keyCache.get(secret);
+      return this.keyCache.get(secret) as CryptoKey;
     }
 
     const secretKeyData = this.encoder.encode(secret);
@@ -41,7 +41,7 @@ export class WebCryptoHmacSigner {
     return key;
   }
 
-  async sign(message: string, secret: string) {
+  async sign(message: string, secret: string): Promise<string> {
     const key = await this.getKeyForSecret(secret);
 
     const mac = await crypto.subtle.sign(
@@ -53,13 +53,13 @@ export class WebCryptoHmacSigner {
     return this.buf2hex(mac);
   }
 
-  async verify(signature: string, data: string, secret: string) {
+  async verify(signature: string, data: string, secret: string): Promise<boolean> {
     const signed = await this.sign(data, secret);
 
     return signature === signed;
   }
 
-  buf2hex(buf: any) {
+  buf2hex(buf: ArrayBuffer): string {
     return Array.prototype.map.call(
       new Uint8Array(buf),
       (x) => (("00" + x.toString(16)).slice(-2)),

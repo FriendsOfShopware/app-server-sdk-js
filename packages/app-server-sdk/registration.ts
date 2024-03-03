@@ -3,6 +3,11 @@ import { AppServer } from "./app.ts";
 export class Registration {
   constructor(private app: AppServer) {}
 
+  /**
+  * This method checks the request for the handshake with the Shopware Shop.
+  * if it's valid a Shop will be created, and a proof will be responded with a confirmation url.
+  * then the Shop will call the confirmation url, and this should be handled by the authorizeCallback method to finish the handshake.
+  */
   public async authorize(req: Request): Promise<Response> {
     const url = new URL(req.url);
 
@@ -52,6 +57,10 @@ export class Registration {
     );
   }
 
+  /**
+  * This method is called by the Shopware Shop to confirm the handshake.
+  * It will update the shop with the given oauth2 credentials.
+  */
   public async authorizeCallback(
     req: Request
   ): Promise<Response> {

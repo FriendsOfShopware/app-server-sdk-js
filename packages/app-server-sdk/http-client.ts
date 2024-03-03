@@ -1,5 +1,8 @@
 import { ShopInterface } from "./repository.ts";
 
+/**
+* HttpClient is a simple wrapper around the fetch API, pre-configured with the shop's URL and access token
+*/
 export class HttpClient {
   private storage: { expiresIn: Date | null; token: string | null };
 
@@ -10,10 +13,16 @@ export class HttpClient {
     };
   }
 
+  /**
+  * Permform a GET request
+  */
   async get(url: string, headers: object = {}): Promise<HttpClientResponse> {
     return await this.request("GET", url, null, headers);
   }
 
+  /**
+  * Permform a POST request
+  */
   async post(
     url: string,
     json: object = {},
@@ -25,6 +34,9 @@ export class HttpClient {
     return await this.request("POST", url, JSON.stringify(json), headers);
   }
 
+  /**
+  * Permform a PUT request
+  */
   async put(
     url: string,
     json: object = {},
@@ -36,6 +48,9 @@ export class HttpClient {
     return await this.request("PUT", url, JSON.stringify(json), headers);
   }
 
+  /**
+  * Permform a PATCH request
+  */
   async patch(
     url: string,
     json: object = {},
@@ -47,6 +62,9 @@ export class HttpClient {
     return await this.request("PATCH", url, JSON.stringify(json), headers);
   }
 
+  /**
+  * Permform a DELETE request
+  */
   async delete(
     url: string,
     json: object = {},
@@ -95,6 +113,9 @@ export class HttpClient {
     return new HttpClientResponse(f.status, await f.json(), f.headers);
   }
 
+  /**
+  * Obtain a valid bearer token
+  */
   async getToken(): Promise<string> {
     if (this.storage.expiresIn === null) {
       const auth = await globalThis.fetch(
@@ -152,6 +173,9 @@ export class HttpClient {
   }
 }
 
+/**
+* HttpClientResponse is the response object of the HttpClient
+*/
 export class HttpClientResponse {
   constructor(
     public statusCode: number,
