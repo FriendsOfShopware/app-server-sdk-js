@@ -7,7 +7,7 @@ This package can be used to integrate the Shopware App Server into a existing Ex
 ```js
 import {AppServer, InMemoryShopRepository} from "@friendsofshopware/app-server-sdk";
 import express from 'express';
-import {convertRequest, convertResponse, rawRequestMiddleware} from '@friendsofshopware/app-server-sdk-express';
+import {convertRequest, convertResponse, rawRequestMiddleware} from '@friendsofshopware/app-server-express';
 
 const app = express();
 
