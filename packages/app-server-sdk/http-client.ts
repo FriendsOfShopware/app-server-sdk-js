@@ -185,12 +185,18 @@ export class HttpClientResponse {
   }
 }
 
+/**
+ * ApiClientAuthenticationFailed is thrown when the authentication to the shop's API fails
+ */
 export class ApiClientAuthenticationFailed extends Error {
   constructor(shopId: string, public response: HttpClientResponse) {
     super(`The api client authentication to shop with id: ${shopId}`);
   }
 }
 
+/**
+ * ApiClientRequestFailed is thrown when the request to the shop's API fails
+ */
 export class ApiClientRequestFailed extends Error {
   constructor(shopId: string, public response: HttpClientResponse) {
     super(

@@ -1,6 +1,6 @@
 {
   "$schema": "https://jsr.io/schema/config-file.v1.json",
-  "name": "@friendsofshopware/app-server",
+  "name": "@friendsofshopware/app-server-express",
   "version": "0.0.48",
   "exports": "./mod.ts"
 }

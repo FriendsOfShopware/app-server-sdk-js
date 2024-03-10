@@ -1,6 +1,24 @@
-import express from "https://deno.land/x/express@v0.0.0/mod.ts";
+interface ExpressResponse {
+    status: (status: number) => void;
+    header: (key: string, value: string) => void;
+    send: (body: string) => void;
+}
 
-export async function convertResponse(response: Response, expressResponse: express.Response) {
+interface ExpressRequest {
+    protocol: string;
+    get: (key: string) => string;
+    originalUrl: string;
+    headers: {[key: string]: string};
+    method: string;
+    rawBody?: string;
+    setEncoding: (encoding: string) => void;
+    on: (event: string, callback: Function) => void;
+}
+
+/**
+ * Converts a fetch Response to a Express Response 
+ */
+export async function convertResponse(response: Response, expressResponse: ExpressResponse) {
     expressResponse.status(response.status);
     response.headers.forEach((val, key) => {
         expressResponse.header(key, val);
@@ -9,7 +27,10 @@ export async function convertResponse(response: Response, expressResponse: expre
     expressResponse.send(await response.text());
 }
 
-export function convertRequest(expressRequest: express.Request): Request {
+/**
+ * Converts a Express request to a fetch Request
+ */
+export function convertRequest(expressRequest: ExpressRequest): Request {
     const headers = new Headers();
 
     for (const [key, value] of Object.entries(expressRequest.headers)) {
@@ -21,16 +42,18 @@ export function convertRequest(expressRequest: express.Request): Request {
         method: expressRequest.method,
     };
 
-    // @ts-ignore
     if (expressRequest.rawBody) {
-        // @ts-ignore
         options.body = expressRequest.rawBody;
     }
 
     return new Request(expressRequest.protocol + '://' + expressRequest.get('host') + expressRequest.originalUrl, options);
 }
 
-export function rawRequestMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
+/**
+ * Middleware to parse the raw body of a request and add it to the request object
+ * This is required as we can compute only the hash of the raw body and a parsed body might be different
+ */
+export function rawRequestMiddleware(req: ExpressRequest, res: ExpressResponse, next: Function): void {
     const contentType = req.headers['content-type'] || ''
         , mime = contentType.split(';')[0];
 
@@ -46,7 +69,6 @@ export function rawRequestMiddleware(req: express.Request, res: express.Response
     });
 
     req.on('end', function() {
-        // @ts-ignore
         req.rawBody = data;
         next();
     });

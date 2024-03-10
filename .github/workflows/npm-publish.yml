@@ -1,4 +1,4 @@
-name: NPM Publish
+name: JSR Publish
 
 on:
   release:
@@ -16,26 +16,17 @@ jobs:
       matrix:
         package:
           - 'app-server-sdk'
-          - 'app-server-sdk-cloudflare'
           - 'app-server-sdk-express'
-          - 'app-server-sdk-hono'
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          registry-url: 'https://registry.npmjs.org'
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-      - name: Transform to NPM Package
+      - uses: actions/checkout@v4
+
+      - name: Update version in JSR
+        working-directory: packages/${{ matrix.package }}
         run: |
-          cd packages/${{ matrix.package }}
-          deno run -A scripts/build.ts ${{ github.event.release.tag_name }}
-      - name: Publish to NPM
-        run: |
-          cd packages/${{ matrix.package }}/npm
-          npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
- 
+          jq '.version = "${{ github.event.release.tag_name }}"' jsr.json > jsr.json.tmp
+          mv jsr.json.tmp jsr.json
+
+      - name: Publish package
+        working-directory: packages/${{ matrix.package }}
+        run: npx jsr publish
