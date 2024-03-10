@@ -5,6 +5,12 @@ import type {
 } from "../repository";
 
 /**
+ * Deno KV integration
+ * @module
+ */
+
+
+/**
 * DenoKVRepository is a ShopRepositoryInterface implementation that uses the Deno KV storage to save the shop data
 */
 export class DenoKVRepository implements ShopRepositoryInterface {

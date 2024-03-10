@@ -5,6 +5,11 @@ import type {
 } from "../repository";
 
 /**
+ * Cloudflare KV integration
+ * @module
+ */
+
+/**
  * Cloudflare KV implementation of the ShopRepositoryInterface
  */
 export class CloudflareShopRepository implements ShopRepositoryInterface {
@@ -63,6 +68,9 @@ export class CloudflareShopRepository implements ShopRepositoryInterface {
   }
 }
 
+/**
+ * Cloudflare KV
+ */
 declare interface KVNamespace<Key extends string = string> {
   get(
     key: Key,
@@ -76,11 +84,17 @@ declare interface KVNamespace<Key extends string = string> {
   delete(key: Key): Promise<void>;
 }
 
+/**
+ * Cloudflare KV get options
+ */
 declare interface KVNamespaceGetOptions<Type> {
   type: Type;
   cacheTtl?: number;
 }
 
+/**
+ * Cloudflare KV put options
+ */
 declare interface KVNamespacePutOptions {
   expiration?: number;
   expirationTtl?: number;

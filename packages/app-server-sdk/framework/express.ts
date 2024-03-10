@@ -1,3 +1,8 @@
+/**
+ * Deno KV integration
+ * @module
+ */
+
 interface ExpressResponse {
     status: (status: number) => void;
     header: (key: string, value: string) => void;

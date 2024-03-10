@@ -65,6 +65,9 @@ export class SimpleShop implements ShopInterface {
   }
 }
 
+/**
+ * InMemoryShopRepository is a simple implementation of the ShopRepositoryInterface, it stores the shop data in memory
+ */
 export class InMemoryShopRepository implements ShopRepositoryInterface {
   private storage: Map<string, ShopInterface>;
 
