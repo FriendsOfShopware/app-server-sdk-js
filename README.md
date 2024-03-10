@@ -1,5 +1,10 @@
 # Shopware App Server SDK in TypeScript
 
+[![JSR](https://jsr.io/badges/@friendsofshopware/app-server)](https://jsr.io/@friendsofshopware/app-server)
+[![JSR Score](https://jsr.io/badges/@friendsofshopware/app-server/score)](https://jsr.io/@friendsofshopware/app-server)
+
+
+
 This SDK is written in pure Typescript with portability in mind being able to use it on NodeJs, Deno, Cloudflare Worker or other runtimes.
 
 ## Features
