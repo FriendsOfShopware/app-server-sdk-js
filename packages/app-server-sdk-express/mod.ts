@@ -13,7 +13,7 @@ interface ExpressRequest {
     protocol: string;
     get: (key: string) => string;
     originalUrl: string;
-    headers: {[key: string]: string};
+    headers: {[key: string]: string | string[]};
     method: string;
     rawBody?: string;
     setEncoding: (encoding: string) => void;
@@ -59,7 +59,7 @@ export function convertRequest(expressRequest: ExpressRequest): Request {
  * This is required as we can compute only the hash of the raw body and a parsed body might be different
  */
 export function rawRequestMiddleware(req: ExpressRequest, res: ExpressResponse, next: Function): void {
-    const contentType = req.headers['content-type'] || ''
+    const contentType = req.headers['content-type'] as string || ''
         , mime = contentType.split(';')[0];
 
     if (mime != 'application/json') {

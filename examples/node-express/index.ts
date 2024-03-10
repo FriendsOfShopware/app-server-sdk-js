@@ -1,10 +1,10 @@
-import {AppServer, AppConfigurationInterface, InMemoryShopRepository, WebCryptoHmacSigner} from "@friendsofshopware/app-server-sdk";
+import {AppServer, InMemoryShopRepository } from "@friendsofshopware/app-server";
 import express from 'express';
-import {convertRequest, convertResponse, rawRequestMiddleware} from '@friendsofshopware/app-server-sdk-express';
+import {convertRequest, convertResponse, rawRequestMiddleware} from '@friendsofshopware/app-server-express';
 
 const app = express();
 
-const cfg: AppConfigurationInterface = {
+const cfg = {
     appName: 'Test',
     appSecret: 'testSecret',
     authorizeCallbackUrl: 'http://localhost:8080/app/lifecycle/register/callback'
