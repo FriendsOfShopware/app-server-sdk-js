@@ -1,8 +1,3 @@
-/**
- * This module provides a way to convert between the fetch API and the Express API
- * @module
- */
-
 interface ExpressResponse {
     status: (status: number) => void;
     header: (key: string, value: string) => void;

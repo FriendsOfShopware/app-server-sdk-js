@@ -1,13 +1,8 @@
-import { SimpleShop } from "jsr:@friendsofshopware/app-server";
+import { SimpleShop } from "../repository";
 import type {
   ShopInterface,
   ShopRepositoryInterface,
-} from "jsr:@friendsofshopware/app-server";
-
-/**
- * Cloudflare integration for Shopware App Server
- * @module
- */
+} from "../repository";
 
 /**
  * Cloudflare KV implementation of the ShopRepositoryInterface

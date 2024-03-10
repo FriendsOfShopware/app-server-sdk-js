@@ -16,8 +16,6 @@ jobs:
       matrix:
         package:
           - 'app-server-sdk'
-          - 'app-server-sdk-express'
-          - 'app-server-sdk-cloudflare'
 
     steps:
       - uses: actions/checkout@v4
