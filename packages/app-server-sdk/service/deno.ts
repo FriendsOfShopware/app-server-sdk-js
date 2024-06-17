@@ -1,8 +1,8 @@
-import { SimpleShop } from "../repository";
+import { SimpleShop } from "../repository.ts";
 import type {
   ShopInterface,
   ShopRepositoryInterface,
-} from "../repository";
+} from "../repository.ts";
 
 /**
  * Deno KV integration
