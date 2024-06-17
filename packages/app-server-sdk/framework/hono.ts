@@ -41,6 +41,9 @@ interface Hono {
 
 let app: AppServer | null = null;
 
+/**
+* Configure the Hono server to handle the app registration and context resolution
+*/
 export function configureAppServer(
   honoExternal: unknown,
   cfg: MiddlewareConfig,
