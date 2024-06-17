@@ -1,6 +1,6 @@
-import { AppServer } from "../app";
+import { AppServer } from "../app.ts";
 import type { Context } from "../context-resolver.ts";
-import type { ShopInterface, ShopRepositoryInterface } from "../repository";
+import type { ShopInterface, ShopRepositoryInterface } from "../repository.ts";
 
 interface MiddlewareConfig {
   appName: string;

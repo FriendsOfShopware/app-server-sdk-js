@@ -6,6 +6,7 @@
     ".": "./mod.ts",
     "./service/cloudflare-workers": "./service/cloudflare.ts",
     "./service/deno": "./service/deno.ts",
-    "./framework/express": "./framework/express.ts"
+    "./framework/express": "./framework/express.ts",
+    "./framework/hono": "./framework/hono.ts"
   }
 }
