@@ -1,14 +1,6 @@
-import { HTTPException } from "https://deno.land/x/hono@v3.12.11/http-exception.ts";
-import type {
-  Context as HonoContext,
-  Hono,
-} from "https://deno.land/x/hono@v3.12.11/mod.ts";
-import {
-  AppServer,
-  Context,
-  ShopInterface,
-  ShopRepositoryInterface,
-} from "https://deno.land/x/shopware_app_server_sdk@0.0.40/mod.ts";
+import { AppServer } from "../app";
+import type { Context } from "../context-resolver.ts";
+import type { ShopInterface, ShopRepositoryInterface } from "../repository";
 
 interface MiddlewareConfig {
   appName: string;
@@ -19,34 +11,53 @@ interface MiddlewareConfig {
   appPath?: string | null;
   shopRepository:
     | ShopRepositoryInterface
-    | ((c: HonoContext) => ShopRepositoryInterface);
+    | ((c: HonoContext<DataTypes>) => ShopRepositoryInterface);
 }
 
-declare module 'hono' {
-  interface ContextVariableMap {
-    app: AppServer;
-    shop: ShopInterface;
-    context: Context;
+interface DataTypes {
+  app: AppServer;
+  context: Context;
+  shop: ShopInterface;
+}
+
+interface HonoContext<DataTypes> {
+  req: {
+    path: string;
+    method: string;
+    url: string
+    raw: Request;
   }
+  header: (key: string, value: string) => void;
+  res: Response;
+  get<K extends keyof DataTypes>(key: K): DataTypes[K];
+  set<K extends keyof DataTypes>(key: K, value: DataTypes[K]): void;
+}
+
+interface Hono {
+  use: (path: string, handler: (ctx: HonoContext<DataTypes>, next: () => Promise<void>) => void) => void;
+  get: (path: string, handler: (ctx: HonoContext<DataTypes>, next: () => void) => void) => void;
+  post: (path: string, handler: (ctx: HonoContext<DataTypes>, next: () => void) => void) => void;
 }
 
 let app: AppServer | null = null;
 
 export function configureAppServer(
-  hono: Hono,
+  honoExternal: unknown,
   cfg: MiddlewareConfig,
 ) {
+
+  const hono = honoExternal as Hono;
+
   cfg.registrationUrl = cfg.registrationUrl || "/app/register";
   cfg.registerConfirmationUrl = cfg.registerConfirmationUrl ||
     "/app/register/confirm";
   cfg.appPath = cfg.appPath || "/app/*";
 
-  hono.use('*', async (ctx, next) => {
+  hono.use("*", async (ctx, next) => {
     if (app === null) {
       const appUrl = cfg.appUrl || buildBaseUrl(ctx.req.url);
 
       if (typeof cfg.shopRepository === "function") {
-        // @ts-ignore
         cfg.shopRepository = cfg.shopRepository(ctx);
       }
 
@@ -69,7 +80,10 @@ export function configureAppServer(
     const app = ctx.get("app") as AppServer;
 
     // Don't validate signature for registration
-    if (ctx.req.path === cfg.registrationUrl || ctx.req.path === cfg.registerConfirmationUrl) {
+    if (
+      ctx.req.path === cfg.registrationUrl ||
+      ctx.req.path === cfg.registerConfirmationUrl
+    ) {
       await next();
       return;
     }
@@ -80,9 +94,7 @@ export function configureAppServer(
         ? await app.contextResolver.fromModule(ctx.req.raw)
         : await app.contextResolver.fromSource(ctx.req.raw);
     } catch (_e) {
-      throw new HTTPException(401, {
-        message: "Unauthorized",
-      });
+      return jsonResponse({ message: "Invalid request" }, 400);
     }
 
     ctx.set("shop", context.shop);
@@ -109,9 +121,7 @@ export function configureAppServer(
     try {
       return await app.registration.authorize(ctx.req.raw);
     } catch (_e) {
-      throw new HTTPException(400, {
-        message: "Invalid request",
-      });
+      return jsonResponse({ message: "Invalid request" }, 400);
     }
   });
 
@@ -121,10 +131,17 @@ export function configureAppServer(
     try {
       return await app.registration.authorizeCallback(ctx.req.raw);
     } catch (_e) {
-      throw new HTTPException(400, {
-        message: "Invalid request",
-      });
+      return jsonResponse({ message: "Invalid request" }, 400);
     }
+  });
+}
+
+function jsonResponse(body: object, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 }
 
