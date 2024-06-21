@@ -3,8 +3,8 @@ import type { Context } from "../context-resolver.ts";
 import type { ShopInterface, ShopRepositoryInterface } from "../repository.ts";
 
 interface MiddlewareConfig {
-  appName: string;
-  appSecret: string;
+  appName: string | ((c: HonoContext<DataTypes>) => string);
+  appSecret: string | ((c: HonoContext<DataTypes>) => string);
   appUrl?: string | null;
   registrationUrl?: string | null;
   registerConfirmationUrl?: string | null;
@@ -21,6 +21,7 @@ interface DataTypes {
 }
 
 interface HonoContext<DataTypes> {
+  env: any;
   req: {
     path: string;
     method: string;
@@ -62,6 +63,14 @@ export function configureAppServer(
 
       if (typeof cfg.shopRepository === "function") {
         cfg.shopRepository = cfg.shopRepository(ctx);
+      }
+
+      if (typeof cfg.appName === "function") {
+        cfg.appName = cfg.appName(ctx);
+      }
+
+      if (typeof cfg.appSecret === "function") {
+        cfg.appSecret = cfg.appSecret(ctx);
       }
 
       app = new AppServer(
