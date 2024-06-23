@@ -2,6 +2,9 @@
 node_modules
 /dist
 npm
+/examples/*/bun.lockdb
+/examples/*/package-lock.json
+/examples/*/.wrangler
 
 # Devenv
 .direnv

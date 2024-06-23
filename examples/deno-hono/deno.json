@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "@friendsofshopware/app-server": "jsr:@friendsofshopware/app-server@^0.0.55",
+    "hono": "jsr:@hono/hono@^4.4.7"
+  }
+}

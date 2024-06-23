@@ -11,13 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@friendsofshopware/app-server-sdk": "^0.0.47",
-    "@friendsofshopware/app-server-sdk-hono": "^0.0.47",
-    "@hono/node-server": "^1.10.1",
-    "hono": "^4.2.7"
+    "@friendsofshopware/app-server": "npm:@jsr/friendsofshopware__app-server@^0.0.55",
+    "@hono/node-server": "^1.11.4",
+    "hono": "^4.4.7"
   },
   "devDependencies": {
-    "tsx": "^4.7.0",
-    "typescript": "^5.3.3"
+    "tsx": "^4.15.7",
+    "typescript": "^5.5.2"
   }
 }

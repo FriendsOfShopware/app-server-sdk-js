@@ -1,0 +1,22 @@
+{
+  "name": "worker-typescript-template",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Cloudflare worker TypeScript template",
+  "main": "worker.js",
+  "scripts": {
+    "dev": "wrangler dev --local"
+  },
+  "author": "author",
+  "license": "MIT",
+  "dependencies": {
+    "@friendsofshopware/app-server": "npm:@jsr/friendsofshopware__app-server@^0.0.55",
+    "hono": "~4.4.7"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240620.0",
+    "esbuild": "0.21.5",
+    "typescript": "^5.5",
+    "wrangler": "^3.61.0"
+  }
+}

@@ -4,7 +4,6 @@
 [![JSR Score](https://jsr.io/badges/@friendsofshopware/app-server/score)](https://jsr.io/@friendsofshopware/app-server)
 
 
-
 This SDK is written in pure Typescript with portability in mind being able to use it on NodeJs, Deno, Cloudflare Worker or other runtimes.
 
 ## Features
@@ -16,89 +15,52 @@ This SDK is written in pure Typescript with portability in mind being able to us
 
 ## How to use it?
 
-Checkout examples folder for all examples.
-
-### NodeJS example
-
-See `examples/node` folder for a full example
-
-```typescript
-import {AppServer, AppConfigurationInterface, InMemoryShopRepository} from "@friendsofshopware/app-server-sdk";
-import express from 'express';
-import {convertRequest, convertResponse, rawRequestMiddleware} from '@friendsofshopware/app-server-sdk-express';
-
-const app = express();
-
-const cfg: AppConfigurationInterface = {
-    appName: 'Test',
-    appSecret: 'testSecret',
-    authorizeCallbackUrl: 'http://localhost:8080/app/lifecycle/register/callback'
-};
-
-const appServer = new AppServer(cfg, new InMemoryShopRepository);
-
-app.use(rawRequestMiddleware);
-
-app.get('/app/lifecycle/register', async (req, res) => {
-    const resp = await appServer.registration.authorize(convertRequest(req));
-
-    convertResponse(resp, res);
-});
-
-app.post('/app/lifecycle/register/callback', async (req, res) => {
-    const resp = await appServer.registration.authorizeCallback(convertRequest(req));
-
-    convertResponse(resp, res);
-});
-
-app.post('/event/product-changed', async (req, res) => {
-    const context = await appServer.contextResolver.fromSource(convertRequest(req));
-
-    console.log(await context.httpClient.post('/search/product'));
-
-    res.send();
-});
-
-app.listen(process.env.PORT || 8080, () => {
-    console.log(`App listening at http://0.0.0.0:${process.env.PORT || 8080}`)
-})
+```bash
+npx jsr add @friendsofshopware/app-server
 ```
 
-
-### Cloudflare example
-
-See `examples/cf-worker` folder for a full example
+## Example
 
 ```typescript
-import {App} from "shopware-app-server-sdk";
-import {Config} from "shopware-app-server-sdk/config";
-import {WebCryptoHmacSigner} from "shopware-app-server-sdk/component/signer";
-import {convertRequest, convertResponse, CloudflareShopRepository} from "shopware-app-server-sdk/runtime/cf-worker";
+import { AppServer, InMemoryShopRepository } from '@friendsofshopware/app-server'
+import { createNotificationResponse } from '@friendsofshopware/app-server/helper/app-actions'
 
-const cfg: Config = {
-    appName: 'Test',
-    appSecret: 'testSecret',
-    authorizeCallbackUrl: 'https://xxxx.shyim.workers.dev/authorize/callback'
-};
+const app = new AppServer({
+    appName: 'MyApp',
+    appSecret: 'my-secret',
+    authorizeCallbackUrl: 'http://localhost:3000/authorize/callback',
+}, new InMemoryShopRepository());
 
-export async function handleRequest(request: Request): Promise<Response> {
-    const url = new URL(request.url);
+const server = Bun.serve({
+    port: 3000,
+    async fetch(request) {
+        const { pathname } = new URL(request.url);
+        if (pathname === '/authorize') {
+            return app.registration.authorize(request);
+        } else if (pathname === '/authorize/callback') {
+            return app.registration.authorizeCallback(request);
+        } else if (pathname === '/app/product') {
+            const context = await app.contextResolver.fromSource(request);
 
-    // This requires that an KV storage has been bound to shopStorage
-    // @ts-ignore
-    const app = new App(cfg, new CloudflareShopRepository(globalThis.shopStorage), new WebCryptoHmacSigner());
+            // do something with payload, and http client
 
-    if (url.pathname.startsWith('/authorize/callback')) {
-        const req = await convertRequest(request);
-        return await convertResponse(await app.registration.authorizeCallback(req));
-    }
+            const notification = createNotificationResponse('success', 'Product created');
 
-    if (url.pathname.startsWith('/authorize')) {
-        const req = await convertRequest(request);
-        return await convertResponse(await app.registration.authorize(req));
-    }
+            // sign the response, with the shop secret
+            await app.signer.signResponse(notification, context.shop.getShopSecret());
 
-    return new Response(`Not found`)
-}
+            return resp;
+        }
 
+        return new Response('Not found', { status: 404 });
+    },
+});
+
+console.log(`Listening on localhost:${server.port}`);
 ```
+
+Checkout the [examples](./examples) folder for more examples using:
+
+- [Cloudflare Worker with Hono](./examples/cloudflare-hono)
+- [Deno with Hono](./examples/deno-hono)
+- [Node with Hono](./examples/node-hono)

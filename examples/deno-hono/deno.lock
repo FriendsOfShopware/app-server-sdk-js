@@ -1,0 +1,24 @@
+{
+  "version": "3",
+  "packages": {
+    "specifiers": {
+      "jsr:@friendsofshopware/app-server@^0.0.55": "jsr:@friendsofshopware/app-server@0.0.55",
+      "jsr:@hono/hono@^4.4.7": "jsr:@hono/hono@4.4.7"
+    },
+    "jsr": {
+      "@friendsofshopware/app-server@0.0.55": {
+        "integrity": "4b6ecf91038a157940443ccb4fb6acb030cdc0c53d490e4008e0183fd74b2a69"
+      },
+      "@hono/hono@4.4.7": {
+        "integrity": "069f612a089362e59786ea925d19fa834096fe92bf4f4b8dd572c508a3a708aa"
+      }
+    }
+  },
+  "remote": {},
+  "workspace": {
+    "dependencies": [
+      "jsr:@friendsofshopware/app-server@^0.0.55",
+      "jsr:@hono/hono@^4.4.7"
+    ]
+  }
+}
