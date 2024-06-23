@@ -11,21 +11,16 @@ jobs:
     permissions:
      contents: read
      id-token: write
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          - 'app-server-sdk'
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Update version in JSR
-        working-directory: packages/${{ matrix.package }}
+        working-directory: src
         run: |
           jq '.version = "${{ github.event.release.tag_name }}"' jsr.json > jsr.json.tmp
           mv jsr.json.tmp jsr.json
 
       - name: Publish package
-        working-directory: packages/${{ matrix.package }}
+        working-directory: src
         run: npx jsr publish --allow-dirty
