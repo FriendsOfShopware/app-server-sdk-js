@@ -7,6 +7,7 @@
     "./service/cloudflare-workers": "./service/cloudflare.ts",
     "./service/deno": "./service/deno.ts",
     "./framework/express": "./framework/express.ts",
-    "./framework/hono": "./framework/hono.ts"
+    "./framework/hono": "./framework/hono.ts",
+    "./helper/app-actions": "./helper/app-actions.ts"
   }
 }
