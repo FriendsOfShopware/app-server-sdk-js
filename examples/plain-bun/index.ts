@@ -1,10 +1,3 @@
-# App Server
-
-This package can be used to create a Shopware App Backend. It's build independent of any JavaScript framework. It relies on Fetch-standardized Request and Response objects.
-
-## Standalone example with Bun
-
-```js
 import { AppServer, InMemoryShopRepository } from '@friendsofshopware/app-server'
 import { createNotificationResponse } from '@friendsofshopware/app-server/helper/app-actions'
 
@@ -40,4 +33,3 @@ const server = Bun.serve({
 });
 
 console.log(`Listening on localhost:${server.port}`);
-```
