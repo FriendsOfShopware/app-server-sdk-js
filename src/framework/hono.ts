@@ -133,7 +133,13 @@ export function configureAppServer(
     try {
       return await app.registration.authorize(ctx.req.raw);
     } catch (_e) {
-      return jsonResponse({ message: "Invalid request" }, 400);
+      let reason = "unknown error"
+
+      if (_e instanceof Error) {
+        reason = _e.message
+      }
+
+      return jsonResponse({ message: `Could not register the shop due to ${reason}` }, 400);
     }
   });
 
@@ -143,7 +149,13 @@ export function configureAppServer(
     try {
       return await app.registration.authorizeCallback(ctx.req.raw);
     } catch (_e) {
-      return jsonResponse({ message: "Invalid request" }, 400);
+      let reason = "unknown error"
+
+      if (_e instanceof Error) {
+        reason = _e.message
+      }
+
+      return jsonResponse({ message: `Could not confirm the reigstration of the shop due to ${reason}` }, 400);
     }
   });
 }
