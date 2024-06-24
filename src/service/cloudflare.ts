@@ -61,8 +61,8 @@ export class CloudflareShopRepository implements ShopRepositoryInterface {
     );
 
     shop.setShopCredentials(
-      obj.clientId || "",
-      obj.clientSecret || "",
+      obj.shopClientId || "",
+      obj.shopClientSecret || "",
     );
     return shop;
   }
