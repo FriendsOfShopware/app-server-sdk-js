@@ -13,7 +13,7 @@
   "dependencies": {
     "@friendsofshopware/app-server": "npm:@jsr/friendsofshopware__app-server@^0.0.55",
     "@hono/node-server": "^1.11.4",
-    "hono": "^4.4.7"
+    "hono": "^4.5.8"
   },
   "devDependencies": {
     "tsx": "^4.15.7",
